@@ -1,0 +1,21 @@
+Sprint 2
+
+
+Things to be Installed for Access to Database:
+
+- PostgreSQL 
+	https://www.enterprisedb.com/downloads/postgres-postgresql-downloads
+
+- Heroku Command Line Interface 
+	https://devcenter.heroku.com/articles/heroku-cli
+
+
+Next
+
+- Go to Heroku and login with Christian's credentials
+
+- Deploy the server
+	use this guide: https://devcenter.heroku.com/categories/python-support
+
+- Verify the deploy
+	URL: https://lasertagteam-13.herokuapp.com/
