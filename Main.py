@@ -1,3 +1,4 @@
+from msilib.schema import CheckBox
 import sys
 import pygame
 import tkinter
@@ -45,6 +46,15 @@ checkBoxColorHover = (75,75,75)
 # initialize font to (defualt pygame font, fontSize)
 font = pygame.font.Font(None, 30)
 
+# other variables
+checkMark = pygame.image.load("checkMark.png")
+checkMark = pygame.transform.scale(checkMark, (30, 30))
+
+checkBoxes = []
+# saves 2 bools that will be set to True if the boxes are being hovered over or are selected
+for x in range(40): # make 38 boxes (19 for each side)
+    checkBoxes.append([False, False]) # left: hovered over ||| right: whether the check appears on the box or not
+
 while True:
     screen.fill((0,195,0)) # fill screen with GREEN
     screen.fill((195,0,0), (0, 0, screen.get_width() / 2, screen.get_height())) # fill right side of screen with RED
@@ -84,9 +94,28 @@ while True:
     text = font.render("Green Team", 1, (5,225,255))
     screen.blit(text, (550, 25))
 
-
     # draws boxes
     for x in range(20):
+
+        # check boxes
+        # left boxes
+        if(checkBoxes[2 * x][0] == True):
+            pygame.draw.rect(screen, (55,55,55), pygame.Rect(10, x * 33 + 56 ,15,15), 3)
+        else:
+            pygame.draw.rect(screen, (5,5,5), pygame.Rect(10, x * 33 + 56 ,15,15), 3)
+        # right boxes
+        if(checkBoxes[2* x + 1][0] == True):
+            pygame.draw.rect(screen, (55,55,55), pygame.Rect(410, x * 33 + 56 ,15,15), 3)
+        else:
+            pygame.draw.rect(screen, (5,5,5), pygame.Rect(410, x * 33 + 56 ,15,15), 3) 
+
+        # checks
+        # left checks
+        if(checkBoxes[2 * x][1] == True):
+            screen.blit(checkMark, (6, x * 33 + 45))
+        # right checks
+        if(checkBoxes[2* x + 1][1] == True):
+            screen.blit(checkMark, (406, x * 33 + 45))
         
         # small boxes
         screen.fill((255,255,255), (30, x * 33 + 50, 120, 30))
