@@ -23,6 +23,10 @@ try:
     codeName = []
 ##########################################################################################
 
+    #execute insert query
+    insertQuery = "INSERT INTO player (id, first_name, last_name, codename) VALUES (2, 'Christian', 'Chung', 'danger');"
+    cursor.execute(insertQuery)
+
     #executing a SQL query
     query = "SELECT * from player"
     cursor.execute(query)
