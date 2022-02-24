@@ -2,6 +2,7 @@ import psycopg2
 from psycopg2 import Error
 
 try:
+    #This identifies the database conneciton on Heroku
     connection = psycopg2.connect(user="aigprmbvspqgeb", 
                                   password="9fc89e2a58804e0d9132b626a88d1788e34c733bf9fed01188ad9c5726974632", 
                                   host="ec2-44-193-188-118.compute-1.amazonaws.com", 
