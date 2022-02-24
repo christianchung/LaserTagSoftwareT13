@@ -1,16 +1,43 @@
 from msilib.schema import CheckBox
+from Database import Database
 import sys
 import pygame
 import tkinter
 import time # for the sleep function
 
-pygame.init()
+#=====================================================================
+#   Pass in database info from Database.py
+#=====================================================================
 
-screen = pygame.display.set_mode([800, 800])
+# Initializes connection to Heroku and retrieves info from the database
+database = Database()
+database.RetrieveInfo()
+
+#Initializes arrays to store the info from the database
+idNumbers = []
+firstNames = []
+lastNames = []
+codeNames = []
+
+# Passes the database info from Database.py into here
+database.PassInformation(idNumbers, firstNames, lastNames, codeNames)
+
+# Test to make sure data is passed in correctly
+print(idNumbers)
+print(firstNames)
+print(lastNames)
+print(codeNames)
+
+# Close connection to Heroku
+database.CloseConnection()
 
 #=====================================================================
 #   Splash Screen
 #=====================================================================
+
+pygame.init()
+
+screen = pygame.display.set_mode([800, 800])
 splashScreen = pygame.image.load("splashScreen2.png")
 width, height = pygame.display.get_surface().get_size()
 splashScreenPosition = (0,0) # splashscreen is positioned at the top left corner of the screen
