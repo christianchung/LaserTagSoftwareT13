@@ -1,16 +1,42 @@
 from asyncio.windows_events import NULL
 from cgitb import small
 from msilib.schema import CheckBox
+<<<<<<< HEAD
 from select import select
+=======
+from Database import Database
+>>>>>>> origin/RicardosBranch
 import sys
 from this import d
 import pygame
 import tkinter
 import time # for the sleep function
 
-pygame.init()
+#=====================================================================
+#   Pass in database info from Database.py
+#=====================================================================
 
-screen = pygame.display.set_mode([800, 800])
+# Initializes connection to Heroku and retrieves info from the database
+database = Database()
+database.RetrieveInfo()
+
+#Initializes arrays to store the info from the database
+idNumbers = []
+firstNames = []
+lastNames = []
+codeNames = []
+
+# Passes the database info from Database.py into here
+database.PassInformation(idNumbers, firstNames, lastNames, codeNames)
+
+# Test to make sure data is passed in correctly
+print(idNumbers)
+print(firstNames)
+print(lastNames)
+print(codeNames)
+
+# Close connection to Heroku
+database.CloseConnection()
 
 #=====================================================================
 #   Splash Screen
