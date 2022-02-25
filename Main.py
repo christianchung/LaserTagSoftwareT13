@@ -134,11 +134,13 @@ while True:
                     if x[1].collidepoint(pygame.mouse.get_pos()):
                         clickFound = True
                         selected = [x, "smallTextBox"]
+                        break
             if not clickFound:
                  for x in largeTextBoxes:
                     if x[1].collidepoint(pygame.mouse.get_pos()):
                         clickFound = True
                         selected = [x, "largeTextBox"]
+                        break
         if event.type == pygame.KEYDOWN and selected[0] != NULL:
             if event.key == pygame.K_RETURN:
                 selected[0] = NULL
