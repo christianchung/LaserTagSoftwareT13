@@ -151,6 +151,15 @@ while True:
         # big boxes
         screen.fill((255,255,255), (155, x * 33 + 50, 240, 30))
         screen.fill((255,255,255), (555, x * 33 + 50, 240, 30))
+        
+    #writes text to boxes (currently only writes to red team side)
+    counter = 0
+    while counter < len(idNumbers) and counter < 20:
+        text = font.render(codeNames[counter], 1, (5,5,5))
+        text2 = font.render(firstNames[counter] + " " + lastNames[counter], 1, (5,5,5))
+        screen.blit(text, (35, counter * 33 + 56))
+        screen.blit(text2, (160, counter * 33 + 56))
+        counter += 1
 
 
     pygame.display.flip() # keep at end of while loop
