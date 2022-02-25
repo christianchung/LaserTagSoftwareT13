@@ -1,5 +1,9 @@
+from asyncio.windows_events import NULL
+from cgitb import small
 from msilib.schema import CheckBox
+from select import select
 import sys
+from this import d
 import pygame
 import tkinter
 import time # for the sleep function
@@ -51,9 +55,58 @@ checkMark = pygame.image.load("checkMark.png")
 checkMark = pygame.transform.scale(checkMark, (30, 30))
 
 checkBoxes = []
-# saves 2 bools that will be set to True if the boxes are being hovered over or are selected
-for x in range(40): # make 38 boxes (19 for each side)
-    checkBoxes.append([False, False]) # left: hovered over ||| right: whether the check appears on the box or not
+smallTextBoxes = []
+largeTextBoxes = []
+
+for x in range(20): # make 20 left check boxes 
+    checkBoxes.append([False, pygame.Rect(20, x * 33 + 56 ,15, 15)]) # left: whether the check appears on the box or not ||| right: stored the rect for drawing and mouse detection
+for x in range(20): # make 20 right check boxes 
+    checkBoxes.append([False, pygame.Rect(420, x * 33 + 56 ,15, 15)]) # left: whether the check appears on the box or not ||| right: stored the rect for drawing and mouse detection
+
+for x in range(20): # make 20 left small text boxes
+    smallTextBoxes.append(["", pygame.Rect(40, x * 33 + 50, 115, 30)]) 
+for x in range(20): # make 20 right small text boxes 
+    smallTextBoxes.append(["", pygame.Rect(440, x * 33 + 50, 115, 30)]) 
+
+for x in range(20): # make 20 left large text boxes 
+    largeTextBoxes.append(["", pygame.Rect(160, x * 33 + 50, 235, 30)]) 
+for x in range(20): # make 20 right large text boxes 
+    largeTextBoxes.append(["", pygame.Rect(560, x * 33 + 50, 235, 30)]) 
+
+selected = [NULL, ""] #stores the currently selected textbox and the type of textbox (large or small) it is
+
+#==================LOAD THE PLAYER LIST HERE==================#
+
+#Change variable names to whatever fits best, all loading is done right here and the variables are not used again later
+leftSideSmallText = ["test1"]
+rightSideSmallText = ["yes", "mhm"]
+
+leftSidelargeText = ["neat"]
+rightSidelargeText = ["another test name", "last one"]
+
+
+### load data into arrays here ###
+
+
+##################################
+
+
+#small text box loading:
+for x in range(len(leftSideSmallText)):
+     smallTextBoxes[x][0] = leftSideSmallText[x]
+
+for x in range(len(rightSideSmallText)):
+     smallTextBoxes[x + 20][0] = rightSideSmallText[x]
+
+# large text box loading:
+for x in range(len(leftSidelargeText)):
+     largeTextBoxes[x][0] = leftSidelargeText[x]
+
+for x in range(len(rightSidelargeText)):
+     largeTextBoxes[x + 20][0] = rightSidelargeText[x]
+
+
+#=============================================================#
 
 while True:
     screen.fill((0,195,0)) # fill screen with GREEN
@@ -66,20 +119,43 @@ while True:
 
         # check for mouse click
         if event.type == pygame.MOUSEBUTTONDOWN:
-              
-            # PROTOTYPE FOR CHECK BOXES - need to add color change or 'X' on click, as well as update a bool for each ID
-            # QUIT on mouse click
-            if 770 <= mouse[0] <= 770+28 and -2 <= mouse[1] <= 26:
-                pygame.quit()
+            clickFound = False #stops checking stuff if we've found what the mouse clicked
+            for x in checkBoxes:
+                if x[1].collidepoint(pygame.mouse.get_pos()):
+                    clickFound = True
+                    if x[0]:
+                        x[0] = False
+                        break
+                    else:
+                        x[0] = True
+                        break
+            if not clickFound:
+                 for x in smallTextBoxes:
+                    if x[1].collidepoint(pygame.mouse.get_pos()):
+                        clickFound = True
+                        selected = [x, "smallTextBox"]
+                        break
+            if not clickFound:
+                 for x in largeTextBoxes:
+                    if x[1].collidepoint(pygame.mouse.get_pos()):
+                        clickFound = True
+                        selected = [x, "largeTextBox"]
+                        break
+        if event.type == pygame.KEYDOWN and selected[0] != NULL:
+            if event.key == pygame.K_RETURN:
+                selected[0] = NULL
+            elif event.key == pygame.K_BACKSPACE:
+                selected[0][0] = selected[0][0][:-1]
+            else:
+                if selected[1] == "smallTextBox":
+                    if len(selected[0][0]) < 9:
+                        selected[0][0] += event.unicode
+                elif selected[1] == "largeTextBox":
+                    if len(selected[0][0]) < 18:
+                        selected[0][0] += event.unicode
 
-    mouse = pygame.mouse.get_pos() # store mouse position
 
-    # change box color on hover
-    if 770 <= mouse[0] <= 770+28 and -2 <= mouse[1] <= 26:
-        pygame.draw.rect(screen,checkBoxColor,[770,2,28,28])
-          
-    else:
-        pygame.draw.rect(screen,checkBoxColorHover,[770,2,28,28])
+
 
     # Team texts
     # add EDIT CURRENT GAME text
@@ -96,34 +172,44 @@ while True:
 
     # draws boxes
     for x in range(20):
-
+        
         # check boxes
         # left boxes
-        if(checkBoxes[2 * x][0] == True):
-            pygame.draw.rect(screen, (55,55,55), pygame.Rect(10, x * 33 + 56 ,15,15), 3)
+        if checkBoxes[x][1].collidepoint(pygame.mouse.get_pos()): #checks if mouse hovering over
+            pygame.draw.rect(screen, (55,55,55), checkBoxes[x][1], 3)
         else:
-            pygame.draw.rect(screen, (5,5,5), pygame.Rect(10, x * 33 + 56 ,15,15), 3)
+            pygame.draw.rect(screen, (5,5,5), checkBoxes[x][1], 3)
         # right boxes
-        if(checkBoxes[2* x + 1][0] == True):
-            pygame.draw.rect(screen, (55,55,55), pygame.Rect(410, x * 33 + 56 ,15,15), 3)
+        if checkBoxes[x + 20][1].collidepoint(pygame.mouse.get_pos()):
+            pygame.draw.rect(screen, (55,55,55), checkBoxes[x + 20][1], 3)
         else:
-            pygame.draw.rect(screen, (5,5,5), pygame.Rect(410, x * 33 + 56 ,15,15), 3) 
+            pygame.draw.rect(screen, (5,5,5), checkBoxes[x + 20][1], 3)
 
         # checks
         # left checks
-        if(checkBoxes[2 * x][1] == True):
-            screen.blit(checkMark, (6, x * 33 + 45))
+        if(checkBoxes[x][0] == True):
+            screen.blit(checkMark, (16, x * 33 + 45))
         # right checks
-        if(checkBoxes[2* x + 1][1] == True):
-            screen.blit(checkMark, (406, x * 33 + 45))
+        if(checkBoxes[x + 20][0] == True):
+            screen.blit(checkMark, (416, x * 33 + 45))
         
-        # small boxes
-        screen.fill((255,255,255), (30, x * 33 + 50, 120, 30))
-        screen.fill((255,255,255), (430, x * 33 + 50, 120, 30))
+        # small text boxes
+        screen.fill((255,255,255), smallTextBoxes[x][1])
+        text = font.render(smallTextBoxes[x][0], 1, (5,5,5))
+        screen.blit(text, text.get_rect(center=(smallTextBoxes[x][1].center)))
 
-        # big boxes
-        screen.fill((255,255,255), (155, x * 33 + 50, 240, 30))
-        screen.fill((255,255,255), (555, x * 33 + 50, 240, 30))
+        screen.fill((255,255,255), smallTextBoxes[x + 20][1])
+        text = font.render(smallTextBoxes[x + 20][0], 1, (5,5,5))
+        screen.blit(text, text.get_rect(center=(smallTextBoxes[x + 20][1].center)))
 
+    
+        # large text boxes
+        screen.fill((255,255,255), largeTextBoxes[x][1])
+        text = font.render(largeTextBoxes[x][0], 1, (5,5,5))
+        screen.blit(text, text.get_rect(center=(largeTextBoxes[x][1].center)))
+
+        screen.fill((255,255,255), largeTextBoxes[x + 20][1])
+        text = font.render(largeTextBoxes[x + 20][0], 1, (5,5,5))
+        screen.blit(text, text.get_rect(center=(largeTextBoxes[x + 20][1].center)))
 
     pygame.display.flip() # keep at end of while loop
