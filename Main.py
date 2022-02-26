@@ -26,13 +26,47 @@ lastNames = []
 codeNames = []
 
 # Passes the database info from Database.py into here
-database.PassInformation(idNumbers, firstNames, lastNames, codeNames)
+database.PassInformation(idNumbers, firstNames, lastNames, codeNames) 
 
 # Test to make sure data is passed in correctly
 print(idNumbers)
 print(firstNames)
 print(lastNames)
 print(codeNames)
+
+
+def saveAndExit(largeTextBoxes): #program saves on exit
+    idNumbers = []
+    firstNames = []
+    lastNames = []
+    codeNames = []
+    for x in range(40):
+        if x < 10:
+            idNumbers.append(x)
+        else:
+            idNumbers.append(x)
+    for x in largeTextBoxes:
+        if(len(x[0]) < 2): #names aren't saved if they're too short (at least 3 characters required)
+            if " " in x[0][1:len(x[0]) - 2]: #if the string contains a space that isn't at the start or end of the string
+                firstNames.append(x[0].split()[0])
+                lastNames.append(x[0].split()[1])
+                codeNames.append(x[0].split()[0][0:1] + x[0].split()[1][0:1]) #codename is made from first initial + last initial
+            else:
+                x.replace(" ", "")
+                firstNames.append(x[0])
+                lastNames.append(x[0])
+                codeNames.append(x[0][0:2]) #codename is made from first 2 letters of input name if no spaces
+        else: #if the names are blank, a space must be inserted because database can't have blank strings
+            firstNames.append(" ")
+            lastNames.append(" ")
+            codeNames.append(" ")
+    #### Add code to export finalized arrays before closing the connection and exiting the program ####
+
+
+
+    ###################################################################################################
+    database.CloseConnection()
+    pygame.display.quit(), sys.exit()
 
 # Close connection to Heroku
 
@@ -113,6 +147,7 @@ rightSideLargeText = ["another test name", "last one"]
 
 
 ### load data into arrays here ###
+# this loads up the IDs (never changes)
 for x in range(20):
     if x < 10:
         leftSideSmallText.append("0" + str(x))
@@ -121,7 +156,15 @@ for x in range(20):
         
 for x in range(20):
     rightSideSmallText.append(str(x + 20))
-        
+
+# this loads up the text boxes
+for x in range(40):
+    if firstNames[x] == " ": # check if there's a first
+        largeTextBoxes[x] = "" #if not, insert blank
+    elif lastNames[x] == " ": # check if there's a last name for this entry
+        largeTextBoxes[x] = firstNames[x] # if not, only insert first name
+    else:
+        largeTextBoxes[x][0] = firstNames[x] + " " + lastNames[x]
 ##################################
 
 
@@ -149,8 +192,7 @@ while True:
     
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            database.CloseConnection()
-            pygame.display.quit(), sys.exit()
+            saveAndExit(largeTextBoxes)
 
         # check for mouse click
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -164,12 +206,12 @@ while True:
                     else:
                         x[0] = True
                         break
-            if not clickFound:
-                 for x in smallTextBoxes:
-                    if x[1].collidepoint(pygame.mouse.get_pos()):
-                        clickFound = True
-                        selected = [x, "smallTextBox"]
-                        break
+            #if not clickFound:         #### STAYS DISABLED UNLESS WE WANT SMALL TEXT BOXES TO BE EDITABLE AGAIN
+            #     for x in smallTextBoxes:
+            #        if x[1].collidepoint(pygame.mouse.get_pos()):
+            #            clickFound = True
+            #            selected = [x, "smallTextBox"]
+            #            break
             if not clickFound:
                  for x in largeTextBoxes:
                     if x[1].collidepoint(pygame.mouse.get_pos()):
