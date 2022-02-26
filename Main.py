@@ -1,16 +1,15 @@
 from asyncio.windows_events import NULL
 from cgitb import small
 from msilib.schema import CheckBox
-<<<<<<< HEAD
 from select import select
-=======
-from Database import Database
->>>>>>> origin/RicardosBranch
+from database import Database
 import sys
 from this import d
 import pygame
 import tkinter
 import time # for the sleep function
+
+pygame.init()
 
 #=====================================================================
 #   Pass in database info from Database.py
@@ -36,7 +35,8 @@ print(lastNames)
 print(codeNames)
 
 # Close connection to Heroku
-database.CloseConnection()
+
+screen = pygame.display.set_mode([800, 800])
 
 #=====================================================================
 #   Splash Screen
@@ -62,6 +62,7 @@ while (splashScreenTimer < 5 * 1): # splash screen is up for 1 second
     pygame.display.flip()         
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            database.CloseConnection()
             pygame.display.quit(), sys.exit()
     splashScreenTimer += 1
     time.sleep(.2) # only sleep for .2 seconds so that the program doesn't freeze from not responding to events
@@ -73,7 +74,7 @@ while (splashScreenTimer < 5 * 1): # splash screen is up for 1 second
 checkBoxColor = (115,115,115)
 checkBoxColorHover = (75,75,75)
 # print(pygame.font.get_fonts())        # gets all fonts on system
-# initialize font to (defualt pygame font, fontSize)
+# initialize font to (default pygame font, fontSize)
 font = pygame.font.Font(None, 30)
 
 # other variables
@@ -104,16 +105,23 @@ selected = [NULL, ""] #stores the currently selected textbox and the type of tex
 #==================LOAD THE PLAYER LIST HERE==================#
 
 #Change variable names to whatever fits best, all loading is done right here and the variables are not used again later
-leftSideSmallText = ["test1"]
-rightSideSmallText = ["yes", "mhm"]
+leftSideSmallText = []
+rightSideSmallText = []
 
-leftSidelargeText = ["neat"]
-rightSidelargeText = ["another test name", "last one"]
+leftSideLargeText = ["neat"]
+rightSideLargeText = ["another test name", "last one"]
 
 
 ### load data into arrays here ###
-
-
+for x in range(20):
+    if x < 10:
+        leftSideSmallText.append("0" + str(x))
+    else:
+        leftSideSmallText.append(str(x))
+        
+for x in range(20):
+    rightSideSmallText.append(str(x + 20))
+        
 ##################################
 
 
@@ -125,11 +133,11 @@ for x in range(len(rightSideSmallText)):
      smallTextBoxes[x + 20][0] = rightSideSmallText[x]
 
 # large text box loading:
-for x in range(len(leftSidelargeText)):
-     largeTextBoxes[x][0] = leftSidelargeText[x]
+for x in range(len(rightSideLargeText)):
+     largeTextBoxes[x][0] = rightSideLargeText[x]
 
-for x in range(len(rightSidelargeText)):
-     largeTextBoxes[x + 20][0] = rightSidelargeText[x]
+for x in range(len(rightSideLargeText)):
+     largeTextBoxes[x + 20][0] = rightSideLargeText[x]
 
 
 #=============================================================#
@@ -141,6 +149,7 @@ while True:
     
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            database.CloseConnection()
             pygame.display.quit(), sys.exit()
 
         # check for mouse click
