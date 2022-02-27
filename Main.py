@@ -52,7 +52,7 @@ def saveAndExit(largeTextBoxes): #program saves on exit
                 lastNames.append(x[0].split()[1])
                 codeNames.append(x[0].split()[0][0:1] + x[0].split()[1][0:1]) #codename is made from first initial + last initial
             else:
-                x.replace(" ", "")
+                x.replace(" ", "") #NEEDS TO BE TROUBLE SHOOTED!!
                 firstNames.append(x[0])
                 lastNames.append(x[0])
                 codeNames.append(x[0][0:2]) #codename is made from first 2 letters of input name if no spaces
