@@ -158,7 +158,7 @@ for x in range(20):
     rightSideSmallText.append(str(x + 20))
 
 # this loads up the text boxes
-for x in range(40):
+for x in range(len(firstNames)):
     if firstNames[x] == " ": # check if there's a first
         largeTextBoxes[x] = "" #if not, insert blank
     elif lastNames[x] == " ": # check if there's a last name for this entry
