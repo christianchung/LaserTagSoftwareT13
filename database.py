@@ -34,56 +34,56 @@ class Database:
             self.record = self.cursor.fetchall()
             
             # Retrieves data from record and passes it into the info arrays
-            # for row in self.record:
-                # self.id.append(row[0])
-                # self.firstName.append(row[1])
-                # self.lastName.append(row[2])
-                # self.codeName.append(row[3])
+            for row in self.record:
+                self.id.append(row[0])
+                self.firstName.append(row[1])
+                self.lastName.append(row[2])
+                self.codeName.append(row[3])
                 # #when player team tag is added
                 # #self.playerTeam.append(row[4]) #will also need to updated in the print statement below
             
             #Retrieves data from record and organizes each entry in order via id 
-            for row in self.record:
-                #no comparison for the first row needed. just append it.
-                if row == 0:
-                    self.id.insert(entry, row[0])
-                    self.firstName.insert(entry, row[1])
-                    self.lastName.insert(entry, row[2])
-                    self.codeName.insert(entry, row[3])
-                    #when player team tag is added
-                    #self.playerTeam.insert(entry, row[4])
+            # for row in self.record:
+            #     #no comparison for the first row needed. just append it.
+            #     if row == 0:
+            #         self.id.insert(entry, row[0])
+            #         self.firstName.insert(entry, row[1])
+            #         self.lastName.insert(entry, row[2])
+            #         self.codeName.insert(entry, row[3])
+            #         #when player team tag is added
+            #         #self.playerTeam.insert(entry, row[4])
                     
-                #subsequent rows are compared to previous entries
-                else:
-                    for entry in self.id:
-                            #if id is smaller than first, new entry is the new first
-                            if entry == 0:
-                                if row[0] < self.id[entry]:
-                                    self.id.insert(entry, row[0])
-                                    self.firstName.insert(entry, row[1])
-                                    self.lastName.insert(entry, row[2])
-                                    self.codeName.insert(entry, row[3])
-                                    #when player team tag is added
-                                    #self.playerTeam.insert(entry, row[4])
+            #     #subsequent rows are compared to previous entries
+            #     else:
+            #         for entry in self.id:
+            #                 #if id is smaller than first, new entry is the new first
+            #                 if entry == 0:
+            #                     if row[0] < self.id[entry]:
+            #                         self.id.insert(entry, row[0])
+            #                         self.firstName.insert(entry, row[1])
+            #                         self.lastName.insert(entry, row[2])
+            #                         self.codeName.insert(entry, row[3])
+            #                         #when player team tag is added
+            #                         #self.playerTeam.insert(entry, row[4])
 
-                            #compare id to remainaing entries and fit it where it goes
-                            elif entry > 0 and entry < self.id.length() - 1:
-                                if row[0] < self.id[entry] and row[0] > self.id[entry - 1]:
-                                    # if self.id[entry] > self.idToAdd and self.overflowIDs[indexTracker - 1] < self.idToAdd:
-                                    #adds player info into slot based on ID (
-                                    self.id.insert(entry, row[0])
-                                    self.firstName.insert(entry, row[1])
-                                    self.lastName.insert(entry, row[2])
-                                    self.codeName.insert(entry, row[3])
-                                    #when player team tag is added
-                                    #self.playerTeam.insert(entry, row[4])
+            #                 #compare id to remainaing entries and fit it where it goes
+            #                 elif entry > 0 and entry < self.id.length() - 1:
+            #                     if row[0] < self.id[entry] and row[0] > self.id[entry - 1]:
+            #                         # if self.id[entry] > self.idToAdd and self.overflowIDs[indexTracker - 1] < self.idToAdd:
+            #                         #adds player info into slot based on ID (
+            #                         self.id.insert(entry, row[0])
+            #                         self.firstName.insert(entry, row[1])
+            #                         self.lastName.insert(entry, row[2])
+            #                         self.codeName.insert(entry, row[3])
+            #                         #when player team tag is added
+            #                         #self.playerTeam.insert(entry, row[4])
                                     
-                            #if it's id is larger than all current entries, append() it to the end
-                            else:
-                                self.id.append(row[0])
-                                self.firstName.append(row[1])
-                                self.lastName.append(row[2])
-                                self.codeName.append(row[3])
+            #                 #if it's id is larger than all current entries, append() it to the end
+            #                 else:
+            #                     self.id.append(row[0])
+            #                     self.firstName.append(row[1])
+            #                     self.lastName.append(row[2])
+            #                     self.codeName.append(row[3])
                                 #when player team tag is added
                                 #self.playerTeam.append(row[4]) #will also need to updated in the print statement below
 
