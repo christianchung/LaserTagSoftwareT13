@@ -17,6 +17,13 @@ pygame.init()
 
 # Initializes connection to Heroku and retrieves info from the database
 database = Database()
+
+
+###########################################################################
+# database.insertFunction("3","john","snow","JS")
+###########################################################################
+
+
 database.RetrieveInfo()
 
 #Initializes arrays to store the info from the database
@@ -33,6 +40,7 @@ print(idNumbers)
 print(firstNames)
 print(lastNames)
 print(codeNames)
+
 
 
 def saveAndExit(largeTextBoxes): #program saves on exit

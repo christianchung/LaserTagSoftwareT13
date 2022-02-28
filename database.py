@@ -96,9 +96,10 @@ class Database:
 
 
 
-    def insertFunction(self, Id, firstName, lastName, codeName):
+    def insertFunction(self, Id, fn, ln, cn):
         try:
-            insertQuery = "INSERT INTO player (id, first_name, last_name, codename) VALUES (" + Id + ", " + firstName + ", " + lastName + ", " + codeName + ");"
+            insertQuery = "INSERT INTO PLAYER \nVALUES ( '" + Id + "', '" + fn + "', '" + ln + "', '" + cn + "');"
+            print(insertQuery)
             self.cursor.execute(insertQuery)
             print("Insert successful")
         except(Exception, Error) as error:
