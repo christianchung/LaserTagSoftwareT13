@@ -48,18 +48,16 @@ def saveAndExit(largeTextBoxes): #program saves on exit
     for x in largeTextBoxes:
         if(len(x[0]) < 2): #names aren't saved if they're too short (at least 3 characters required)
             if " " in x[0][1:len(x[0]) - 2]: #if the string contains a space that isn't at the start or end of the string
+                idNumbers.append(x)
                 firstNames.append(x[0].split()[0])
                 lastNames.append(x[0].split()[1])
                 codeNames.append(x[0].split()[0][0:1] + x[0].split()[1][0:1]) #codename is made from first initial + last initial
             else:
                 x[0].replace(" ", "") 
+                idNumbers.append(x)
                 firstNames.append(x[0])
                 lastNames.append(x[0])
                 codeNames.append(x[0][0:2]) #codename is made from first 2 letters of input name if no spaces
-        else: #if the names are blank, a space must be inserted because database can't have blank strings
-            firstNames.append(" ")
-            lastNames.append(" ")
-            codeNames.append(" ")
     #### Add code to export finalized arrays before closing the connection and exiting the program ####
 
 
