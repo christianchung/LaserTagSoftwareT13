@@ -94,6 +94,18 @@ class Database:
         except(Exception, Error) as error:
             print("Error while executing query.", error)
 
+
+
+    def insertFunction(self, Id, firstName, lastName, codeName):
+        try:
+            insertQuery = "INSERT INTO player (id, first_name, last_name, codename) VALUES (" + Id + ", " + firstName + ", " + lastName + ", " + codeName + ");"
+            self.cursor.execute(insertQuery)
+            print("Insert successful")
+        except(Exception, Error) as error:
+            print("Error with insert function. \n" , error)
+
+
+
     def PassInformation(self, passID, passFirst, passLast, passCode):
         # Blank arrays are passed in from the main program and are filled in by
         # elements of the arrays storing info from the database
