@@ -46,7 +46,7 @@ def saveAndExit(largeTextBoxes): #program saves on exit
             if " " in largeTextBoxes[x][0][1:len(largeTextBoxes[x][0]) - 2]: #if the string contains a space that isn't at the start or end of the string
                 idNumbers.append(x)
                 firstNames.append(largeTextBoxes[x][0].split()[0])
-                lastNames.append(largeTextBoxes[x][0].split()[1])
+                lastNames.append(largeTextBoxes[x][0].split()[len(largeTextBoxes[x][0].split()) - 1])
                 codeNames.append(largeTextBoxes[x][0].split()[0][0:1] + largeTextBoxes[x][0].split()[1][0:1]) #codename is made from first initial + last initial
             else:
                 idNumbers.append(x)
