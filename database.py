@@ -167,7 +167,7 @@ class Database:
     # #prints to console the contents of all the arrays(the attributes)
     # for x in range(len(id)):
         # print(f" id: {id[x]} \n First Name: {firstName[x]} \n Last Name: {lastName[x]} \n Code Name: {codeName[x]} \n\n")
-
+#
 # #if fail to connect
 # except(Exception, Error) as error:
     # print("Error while connecting to PostgreSQL", error)

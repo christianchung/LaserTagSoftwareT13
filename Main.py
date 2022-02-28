@@ -52,7 +52,7 @@ def saveAndExit(largeTextBoxes): #program saves on exit
                 lastNames.append(x[0].split()[1])
                 codeNames.append(x[0].split()[0][0:1] + x[0].split()[1][0:1]) #codename is made from first initial + last initial
             else:
-                x.replace(" ", "") #NEEDS TO BE TROUBLE SHOOTED!!
+                x[0].replace(" ", "") 
                 firstNames.append(x[0])
                 lastNames.append(x[0])
                 codeNames.append(x[0][0:2]) #codename is made from first 2 letters of input name if no spaces
@@ -65,10 +65,10 @@ def saveAndExit(largeTextBoxes): #program saves on exit
 
 
     ###################################################################################################
+    # Close connection to Heroku
     database.CloseConnection()
     pygame.display.quit(), sys.exit()
 
-# Close connection to Heroku
 
 screen = pygame.display.set_mode([800, 800])
 
@@ -149,38 +149,21 @@ rightSideLargeText = ["another test name", "last one"]
 ### load data into arrays here ###
 # this loads up the IDs (never changes)
 for x in range(20):
-    if x < 10:
-        leftSideSmallText.append("0" + str(x))
+    if x < 10: # makes sure every text box on the left has 2 digits
+        smallTextBoxes[x][0] = ("0" + str(x)) 
     else:
-        leftSideSmallText.append(str(x))
+        smallTextBoxes[x][0] = (str(x)) 
+    smallTextBoxes[x+20][0] = (str(x + 20)) #right text boxes
         
-for x in range(20):
-    rightSideSmallText.append(str(x + 20))
-
 # this loads up the text boxes
 for x in range(len(firstNames)):
     if firstNames[x] == " ": # check if there's a first
         largeTextBoxes[x] = "" #if not, insert blank
     elif lastNames[x] == " ": # check if there's a last name for this entry
-        largeTextBoxes[x] = firstNames[x] # if not, only insert first name
+        largeTextBoxes[idNumbers[x]] = firstNames[x] # if not, only insert first name
     else:
-        largeTextBoxes[x][0] = firstNames[x] + " " + lastNames[x]
+        largeTextBoxes[idNumbers[x]][0] = firstNames[x] + " " + lastNames[x]
 ##################################
-
-
-#small text box loading:
-for x in range(len(leftSideSmallText)):
-     smallTextBoxes[x][0] = leftSideSmallText[x]
-
-for x in range(len(rightSideSmallText)):
-     smallTextBoxes[x + 20][0] = rightSideSmallText[x]
-
-# large text box loading:
-for x in range(len(rightSideLargeText)):
-     largeTextBoxes[x][0] = rightSideLargeText[x]
-
-for x in range(len(rightSideLargeText)):
-     largeTextBoxes[x + 20][0] = rightSideLargeText[x]
 
 
 #=============================================================#
