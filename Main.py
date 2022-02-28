@@ -40,6 +40,7 @@ def saveAndExit(largeTextBoxes): #program saves on exit
     firstNames = []
     lastNames = []
     codeNames = []
+    
     for x in range(len(largeTextBoxes)):
         if(len(largeTextBoxes[x][0]) > 2): #names aren't saved if they're too short (at least 3 characters required)
             if " " in largeTextBoxes[x][0][1:len(largeTextBoxes[x][0]) - 2]: #if the string contains a space that isn't at the start or end of the string
@@ -48,14 +49,14 @@ def saveAndExit(largeTextBoxes): #program saves on exit
                 lastNames.append(largeTextBoxes[x][0].split()[1])
                 codeNames.append(largeTextBoxes[x][0].split()[0][0:1] + largeTextBoxes[x][0].split()[1][0:1]) #codename is made from first initial + last initial
             else:
-                largeTextBoxes[x][0].replace(" ", "") 
                 idNumbers.append(x)
+                largeTextBoxes[x][0].replace(" ", "") 
                 firstNames.append(largeTextBoxes[x][0])
-                lastNames.append(largeTextBoxes[x][0])
+                lastNames.append(" ")
                 codeNames.append(largeTextBoxes[x][0][0:2]) #codename is made from first 2 letters of input name if no spaces
-    #### Add code to export finalized arrays before closing the connection and exiting the program ####
-    for x in range(len(idNumbers)):    
-        database.insertFunction(str(idNumbers[x]), firstNames[x], lastNames[x], codeNames[x])
+    #### Add code to export finalized arrays before closing the connection and exiting the program ####   
+    database.deleteFunction()
+    database.insertFunction(idNumbers, firstNames, lastNames, codeNames)
 
     ###################################################################################################
     # Close connection to Heroku
@@ -132,12 +133,6 @@ selected = [NULL, ""] #stores the currently selected textbox and the type of tex
 #==================LOAD THE PLAYER LIST HERE==================#
 
 #Change variable names to whatever fits best, all loading is done right here and the variables are not used again later
-leftSideSmallText = []
-rightSideSmallText = []
-
-leftSideLargeText = ["neat"]
-rightSideLargeText = ["another test name", "last one"]
-
 
 ### load data into arrays here ###
 # this loads up the IDs (never changes)
@@ -153,7 +148,7 @@ for x in range(len(firstNames)):
     if firstNames[x] == " ": # check if there's a first
         largeTextBoxes[x] = "" #if not, insert blank
     elif lastNames[x] == " ": # check if there's a last name for this entry
-        largeTextBoxes[idNumbers[x]] = firstNames[x] # if not, only insert first name
+        largeTextBoxes[idNumbers[x]][0] = firstNames[x] # if not, only insert first name
     else:
         largeTextBoxes[idNumbers[x]][0] = firstNames[x] + " " + lastNames[x]
 ##################################
@@ -266,3 +261,4 @@ while True:
         screen.blit(text, text.get_rect(center=(largeTextBoxes[x + 20][1].center)))
 
     pygame.display.flip() # keep at end of while loop
+

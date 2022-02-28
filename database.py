@@ -97,14 +97,29 @@ class Database:
 
 
     def insertFunction(self, Id, fn, ln, cn):
-        try:
-            insertQuery = "INSERT INTO PLAYER \nVALUES ( '" + Id + "', '" + fn + "', '" + ln + "', '" + cn + "');"
-            print(insertQuery)
-            self.cursor.execute(insertQuery)
+            for x in range(len(fn)):  
+                try:
+                    insertQuery = "INSERT INTO PLAYER \nVALUES ( '" + str(Id[x]) + "', '" + fn[x] + "', '" + ln[x] + "', '" + cn[x] + "');"
+                    print(insertQuery)
+                    self.cursor.execute(insertQuery)
+                except(Exception, Error) as error:
+                    print("Error with insert function. \n" , error)
             print("Insert successful")
             self.connection.commit()
-        except(Exception, Error) as error:
-            print("Error with insert function. \n" , error)
+
+    
+    def deleteFunction(self):
+        deleteQuery = "DELETE FROM PLAYER"
+        self.cursor.execute(deleteQuery)
+        self.connection.commit() 
+        #for x in range (len(Id)):
+        #    try:
+        #        deleteQuery = "DELETE FROM PLAYER \nVALUES WHERE Id =" + "'" + Id + "'"
+        #        self.cursor.execute(deleteQuery)
+        #        self.connection.commit() 
+        #    except(Exception, Error) as error:
+        #        print("Error with delete function. \n", error)
+        self.connection.commit() 
 
 
 
