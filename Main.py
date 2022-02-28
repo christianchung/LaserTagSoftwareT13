@@ -1,6 +1,7 @@
 from asyncio.windows_events import NULL
 from cgitb import small
 from msilib.schema import CheckBox
+import numbers
 from select import select
 from database import Database
 import sys
@@ -17,13 +18,6 @@ pygame.init()
 
 # Initializes connection to Heroku and retrieves info from the database
 database = Database()
-
-
-###########################################################################
-# database.insertFunction("3","john","snow","JS")
-###########################################################################
-
-
 database.RetrieveInfo()
 
 #Initializes arrays to store the info from the database
@@ -41,34 +35,27 @@ print(firstNames)
 print(lastNames)
 print(codeNames)
 
-
-
 def saveAndExit(largeTextBoxes): #program saves on exit
     idNumbers = []
     firstNames = []
     lastNames = []
     codeNames = []
-    for x in range(40):
-        if x < 10:
-            idNumbers.append(x)
-        else:
-            idNumbers.append(x)
-    for x in largeTextBoxes:
-        if(len(x[0]) < 2): #names aren't saved if they're too short (at least 3 characters required)
-            if " " in x[0][1:len(x[0]) - 2]: #if the string contains a space that isn't at the start or end of the string
+    for x in range(len(largeTextBoxes)):
+        if(len(largeTextBoxes[x][0]) > 2): #names aren't saved if they're too short (at least 3 characters required)
+            if " " in largeTextBoxes[x][0][1:len(largeTextBoxes[x][0]) - 2]: #if the string contains a space that isn't at the start or end of the string
                 idNumbers.append(x)
-                firstNames.append(x[0].split()[0])
-                lastNames.append(x[0].split()[1])
-                codeNames.append(x[0].split()[0][0:1] + x[0].split()[1][0:1]) #codename is made from first initial + last initial
+                firstNames.append(largeTextBoxes[x][0].split()[0])
+                lastNames.append(largeTextBoxes[x][0].split()[1])
+                codeNames.append(largeTextBoxes[x][0].split()[0][0:1] + largeTextBoxes[x][0].split()[1][0:1]) #codename is made from first initial + last initial
             else:
-                x[0].replace(" ", "") 
+                largeTextBoxes[x][0].replace(" ", "") 
                 idNumbers.append(x)
-                firstNames.append(x[0])
-                lastNames.append(x[0])
-                codeNames.append(x[0][0:2]) #codename is made from first 2 letters of input name if no spaces
+                firstNames.append(largeTextBoxes[x][0])
+                lastNames.append(largeTextBoxes[x][0])
+                codeNames.append(largeTextBoxes[x][0][0:2]) #codename is made from first 2 letters of input name if no spaces
     #### Add code to export finalized arrays before closing the connection and exiting the program ####
-
-
+    for x in range(len(idNumbers)):    
+        database.insertFunction(str(idNumbers[x]), firstNames[x], lastNames[x], codeNames[x])
 
     ###################################################################################################
     # Close connection to Heroku

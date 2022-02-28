@@ -102,6 +102,7 @@ class Database:
             print(insertQuery)
             self.cursor.execute(insertQuery)
             print("Insert successful")
+            self.connection.commit()
         except(Exception, Error) as error:
             print("Error with insert function. \n" , error)
 
