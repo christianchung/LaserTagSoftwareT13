@@ -35,7 +35,7 @@ print(firstNames)
 print(lastNames)
 print(codeNames)
 
-def saveAndExit(largeTextBoxes): #program saves on exit
+def save(largeTextBoxes): #program saves on exit
     idNumbers = []
     firstNames = []
     lastNames = []
@@ -59,9 +59,7 @@ def saveAndExit(largeTextBoxes): #program saves on exit
     database.insertFunction(idNumbers, firstNames, lastNames, codeNames)
 
     ###################################################################################################
-    # Close connection to Heroku
-    database.CloseConnection()
-    pygame.display.quit(), sys.exit()
+
 
 
 screen = pygame.display.set_mode([800, 800])
@@ -163,8 +161,10 @@ while True:
     
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            saveAndExit(largeTextBoxes)
-
+            save(largeTextBoxes)
+            # Close connection to Heroku
+            database.CloseConnection()
+            pygame.display.quit(), sys.exit()
         # check for mouse click
         if event.type == pygame.MOUSEBUTTONDOWN:
             clickFound = False #stops checking stuff if we've found what the mouse clicked
