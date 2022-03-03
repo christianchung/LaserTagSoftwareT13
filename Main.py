@@ -1,5 +1,6 @@
 from asyncio.windows_events import NULL
 from cgitb import small
+#from curses import window
 from msilib.schema import CheckBox
 import numbers
 from select import select
@@ -7,7 +8,7 @@ from database import Database
 import sys
 from this import d
 import pygame
-import tkinter
+#import tkinter
 import time # for the sleep function
 
 pygame.init()
@@ -30,10 +31,10 @@ codeNames = []
 database.PassInformation(idNumbers, firstNames, lastNames, codeNames) 
 
 # Test to make sure data is passed in correctly
-print(idNumbers)
-print(firstNames)
-print(lastNames)
-print(codeNames)
+#print(idNumbers)
+#print(firstNames)
+#print(lastNames)
+#print(codeNames)
 
 def save(largeTextBoxes): #program saves on exit
     idNumbers = []

@@ -119,8 +119,6 @@ class Database:
         #        self.connection.commit() 
         #    except(Exception, Error) as error:
         #        print("Error with delete function. \n", error)
-        self.connection.commit() 
-
 
 
     def PassInformation(self, passID, passFirst, passLast, passCode):
