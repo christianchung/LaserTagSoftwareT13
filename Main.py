@@ -1,14 +1,67 @@
 from asyncio.windows_events import NULL
 from cgitb import small
+#from curses import window
 from msilib.schema import CheckBox
+import numbers
 from select import select
+from database import Database
 import sys
 from this import d
 import pygame
-import tkinter
+#import tkinter
 import time # for the sleep function
 
 pygame.init()
+
+#=====================================================================
+#   Pass in database info from Database.py
+#=====================================================================
+
+# Initializes connection to Heroku and retrieves info from the database
+database = Database()
+database.RetrieveInfo()
+
+#Initializes arrays to store the info from the database
+idNumbers = []
+firstNames = []
+lastNames = []
+codeNames = []
+
+# Passes the database info from Database.py into here
+database.PassInformation(idNumbers, firstNames, lastNames, codeNames) 
+
+# Test to make sure data is passed in correctly
+#print(idNumbers)
+#print(firstNames)
+#print(lastNames)
+#print(codeNames)
+
+def save(largeTextBoxes): #program saves on exit
+    idNumbers = []
+    firstNames = []
+    lastNames = []
+    codeNames = []
+    
+    for x in range(len(largeTextBoxes)):
+        if(len(largeTextBoxes[x][0]) > 2): #names aren't saved if they're too short (at least 3 characters required)
+            if " " in largeTextBoxes[x][0][1:len(largeTextBoxes[x][0]) - 2]: #if the string contains a space that isn't at the start or end of the string
+                idNumbers.append(x)
+                firstNames.append(largeTextBoxes[x][0].split()[0])
+                lastNames.append(largeTextBoxes[x][0].split()[len(largeTextBoxes[x][0].split()) - 1])
+                codeNames.append(largeTextBoxes[x][0].split()[0][0:1] + largeTextBoxes[x][0].split()[1][0:1]) #codename is made from first initial + last initial
+            else:
+                idNumbers.append(x)
+                largeTextBoxes[x][0].replace(" ", "") 
+                firstNames.append(largeTextBoxes[x][0])
+                lastNames.append(" ")
+                codeNames.append(largeTextBoxes[x][0][0:2]) #codename is made from first 2 letters of input name if no spaces
+    #### Add code to export finalized arrays before closing the connection and exiting the program ####   
+    database.deleteFunction()
+    database.insertFunction(idNumbers, firstNames, lastNames, codeNames)
+
+    ###################################################################################################
+
+
 
 screen = pygame.display.set_mode([800, 800])
 
@@ -36,6 +89,7 @@ while (splashScreenTimer < 5 * 1): # splash screen is up for 1 second
     pygame.display.flip()         
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            database.CloseConnection()
             pygame.display.quit(), sys.exit()
     splashScreenTimer += 1
     time.sleep(.2) # only sleep for .2 seconds so that the program doesn't freeze from not responding to events
@@ -47,7 +101,7 @@ while (splashScreenTimer < 5 * 1): # splash screen is up for 1 second
 checkBoxColor = (115,115,115)
 checkBoxColorHover = (75,75,75)
 # print(pygame.font.get_fonts())        # gets all fonts on system
-# initialize font to (defualt pygame font, fontSize)
+# initialize font to (default pygame font, fontSize)
 font = pygame.font.Font(None, 30)
 
 # other variables
@@ -78,32 +132,25 @@ selected = [NULL, ""] #stores the currently selected textbox and the type of tex
 #==================LOAD THE PLAYER LIST HERE==================#
 
 #Change variable names to whatever fits best, all loading is done right here and the variables are not used again later
-leftSideSmallText = ["test1"]
-rightSideSmallText = ["yes", "mhm"]
-
-leftSidelargeText = ["neat"]
-rightSidelargeText = ["another test name", "last one"]
-
 
 ### load data into arrays here ###
-
-
+# this loads up the IDs (never changes)
+for x in range(20):
+    if x < 10: # makes sure every text box on the left has 2 digits
+        smallTextBoxes[x][0] = ("0" + str(x)) 
+    else:
+        smallTextBoxes[x][0] = (str(x)) 
+    smallTextBoxes[x+20][0] = (str(x + 20)) #right text boxes
+        
+# this loads up the text boxes
+for x in range(len(firstNames)):
+    if firstNames[x] == " ": # check if there's a first
+        largeTextBoxes[x] = "" #if not, insert blank
+    elif lastNames[x] == " ": # check if there's a last name for this entry
+        largeTextBoxes[idNumbers[x]][0] = firstNames[x] # if not, only insert first name
+    else:
+        largeTextBoxes[idNumbers[x]][0] = firstNames[x] + " " + lastNames[x]
 ##################################
-
-
-#small text box loading:
-for x in range(len(leftSideSmallText)):
-     smallTextBoxes[x][0] = leftSideSmallText[x]
-
-for x in range(len(rightSideSmallText)):
-     smallTextBoxes[x + 20][0] = rightSideSmallText[x]
-
-# large text box loading:
-for x in range(len(leftSidelargeText)):
-     largeTextBoxes[x][0] = leftSidelargeText[x]
-
-for x in range(len(rightSidelargeText)):
-     largeTextBoxes[x + 20][0] = rightSidelargeText[x]
 
 
 #=============================================================#
@@ -115,8 +162,10 @@ while True:
     
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            save(largeTextBoxes)
+            # Close connection to Heroku
+            database.CloseConnection()
             pygame.display.quit(), sys.exit()
-
         # check for mouse click
         if event.type == pygame.MOUSEBUTTONDOWN:
             clickFound = False #stops checking stuff if we've found what the mouse clicked
@@ -129,12 +178,12 @@ while True:
                     else:
                         x[0] = True
                         break
-            if not clickFound:
-                 for x in smallTextBoxes:
-                    if x[1].collidepoint(pygame.mouse.get_pos()):
-                        clickFound = True
-                        selected = [x, "smallTextBox"]
-                        break
+            #if not clickFound:         #### STAYS DISABLED UNLESS WE WANT SMALL TEXT BOXES TO BE EDITABLE AGAIN
+            #     for x in smallTextBoxes:
+            #        if x[1].collidepoint(pygame.mouse.get_pos()):
+            #            clickFound = True
+            #            selected = [x, "smallTextBox"]
+            #            break
             if not clickFound:
                  for x in largeTextBoxes:
                     if x[1].collidepoint(pygame.mouse.get_pos()):
@@ -169,6 +218,14 @@ while True:
     # add GREEN TEAM text
     text = font.render("Green Team", 1, (5,225,255))
     screen.blit(text, (550, 25))
+
+    # add text saving info
+    smallFont = pygame.font.Font(None, 18)
+    # pygame doesn't support multiple lines, must blit two different strings
+    text = smallFont.render("Names save to database when program closes", 1, (0,0,0))
+    screen.blit(text, (0,0))
+    text = smallFont.render("and load from database when program opens", 1, (0,0,0))
+    screen.blit(text, (0,12))
 
     # draws boxes
     for x in range(20):
@@ -213,3 +270,4 @@ while True:
         screen.blit(text, text.get_rect(center=(largeTextBoxes[x + 20][1].center)))
 
     pygame.display.flip() # keep at end of while loop
+
