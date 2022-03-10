@@ -36,32 +36,44 @@ database.PassInformation(idNumbers, firstNames, lastNames, codeNames)
 #print(lastNames)
 #print(codeNames)
 
-def save(largeTextBoxes): #program saves on exit
-    idNumbers = []
-    firstNames = []
-    lastNames = []
-    codeNames = []
+# def save(largeTextBoxes): #program saves on exit
+#     idNumbers = []
+#     firstNames = []
+#     lastNames = []
+#     codeNames = []
     
-    for x in range(len(largeTextBoxes)):
-        if(len(largeTextBoxes[x][0]) > 2): #names aren't saved if they're too short (at least 3 characters required)
-            if " " in largeTextBoxes[x][0][1:len(largeTextBoxes[x][0]) - 2]: #if the string contains a space that isn't at the start or end of the string
-                idNumbers.append(x)
-                firstNames.append(largeTextBoxes[x][0].split()[0])
-                lastNames.append(largeTextBoxes[x][0].split()[len(largeTextBoxes[x][0].split()) - 1])
-                codeNames.append(largeTextBoxes[x][0].split()[0][0:1] + largeTextBoxes[x][0].split()[1][0:1]) #codename is made from first initial + last initial
-            else:
-                idNumbers.append(x)
-                largeTextBoxes[x][0].replace(" ", "") 
-                firstNames.append(largeTextBoxes[x][0])
-                lastNames.append(" ")
-                codeNames.append(largeTextBoxes[x][0][0:2]) #codename is made from first 2 letters of input name if no spaces
-    #### Add code to export finalized arrays before closing the connection and exiting the program ####   
-    database.deleteFunction()
-    database.insertFunction(idNumbers, firstNames, lastNames, codeNames)
+#     for x in range(len(largeTextBoxes)):
+#         if(len(largeTextBoxes[x][0]) > 2): #names aren't saved if they're too short (at least 3 characters required)
+#             if " " in largeTextBoxes[x][0][1:len(largeTextBoxes[x][0]) - 2]: #if the string contains a space that isn't at the start or end of the string
+#                 idNumbers.append(x)
+#                 firstNames.append(largeTextBoxes[x][0].split()[0])
+#                 lastNames.append(largeTextBoxes[x][0].split()[len(largeTextBoxes[x][0].split()) - 1])
+#                 codeNames.append(largeTextBoxes[x][0].split()[0][0:1] + largeTextBoxes[x][0].split()[1][0:1]) #codename is made from first initial + last initial
+#             else:
+#                 idNumbers.append(x)
+#                 largeTextBoxes[x][0].replace(" ", "") 
+#                 firstNames.append(largeTextBoxes[x][0])
+#                 lastNames.append(" ")
+#                 codeNames.append(largeTextBoxes[x][0][0:2]) #codename is made from first 2 letters of input name if no spaces
+#     #### Add code to export finalized arrays before closing the connection and exiting the program ####   
+#     database.deleteFunction()
+#     database.insertFunction(idNumbers, firstNames, lastNames, codeNames)
 
-    ###################################################################################################
+#     ###################################################################################################
 
 
+#For when a text box is deslected, happens if user clicks or presses enter while typing in a box
+def deselect(selected):
+    if(selected[1] == "smallTextBox" and selected[0][0].replace(" ", "") != ""): # if it's a small text box and has a valid id excluding spaces        
+        database.LoadName(selected[0][0], largeTextBoxes[selected[2]])    
+
+        print("loaded player!")  #change to show on screen later
+    elif(selected[1] == "largeTextBox" and smallTextBoxes[selected[2]][0].replace(" ", "") != ""): # if it's a large text box and the small text box beside it has an ID
+        database.deleteFunction(smallTextBoxes[selected[2]][0]) #deletes player at id of neighboring small text box
+        if(selected[0][0] != "" and selected[0][0] != " "): #if the name is empty then the id associated with it gets deleted and not re-inserted
+            database.insertFunction(smallTextBoxes[selected[2]][0], " ", " ", selected[0][0])
+
+    selected = NULL
 
 screen = pygame.display.set_mode([800, 800])
 
@@ -120,14 +132,14 @@ for x in range(20): # make 20 right check boxes
 for x in range(20): # make 20 left small text boxes
     smallTextBoxes.append(["", pygame.Rect(40, x * 33 + 50, 115, 30)]) 
 for x in range(20): # make 20 right small text boxes 
-    smallTextBoxes.append(["", pygame.Rect(440, x * 33 + 50, 115, 30)]) 
+    smallTextBoxes.append(["", pygame.Rect(440, x * 33 + 50, 115, 30)])  
 
 for x in range(20): # make 20 left large text boxes 
     largeTextBoxes.append(["", pygame.Rect(160, x * 33 + 50, 235, 30)]) 
 for x in range(20): # make 20 right large text boxes 
     largeTextBoxes.append(["", pygame.Rect(560, x * 33 + 50, 235, 30)]) 
 
-selected = [NULL, ""] #stores the currently selected textbox and the type of textbox (large or small) it is
+selected = NULL #stores the currently selected textbox and the type of textbox (large or small) it is
 
 #==================LOAD THE PLAYER LIST HERE==================#
 
@@ -135,21 +147,21 @@ selected = [NULL, ""] #stores the currently selected textbox and the type of tex
 
 ### load data into arrays here ###
 # this loads up the IDs (never changes)
-for x in range(20):
-    if x < 10: # makes sure every text box on the left has 2 digits
-        smallTextBoxes[x][0] = ("0" + str(x)) 
-    else:
-        smallTextBoxes[x][0] = (str(x)) 
-    smallTextBoxes[x+20][0] = (str(x + 20)) #right text boxes
+# for x in range(20):
+#     if x < 10: # makes sure every text box on the left has 2 digits
+#         smallTextBoxes[x][0] = ("0" + str(x)) 
+#     else:
+#         smallTextBoxes[x][0] = (str(x)) 
+#     smallTextBoxes[x+20][0] = (str(x + 20)) #right text boxes
         
-# this loads up the text boxes
-for x in range(len(firstNames)):
-    if firstNames[x] == " ": # check if there's a first
-        largeTextBoxes[x] = "" #if not, insert blank
-    elif lastNames[x] == " ": # check if there's a last name for this entry
-        largeTextBoxes[idNumbers[x]][0] = firstNames[x] # if not, only insert first name
-    else:
-        largeTextBoxes[idNumbers[x]][0] = firstNames[x] + " " + lastNames[x]
+# # this loads up the text boxes
+# for x in range(len(firstNames)):
+#     if firstNames[x] == " ": # check if there's a first
+#         largeTextBoxes[x] = "" #if not, insert blank
+#     elif lastNames[x] == " ": # check if there's a last name for this entry
+#         largeTextBoxes[idNumbers[x]][0] = firstNames[x] # if not, only insert first name
+#     else:
+#         largeTextBoxes[idNumbers[x]][0] = firstNames[x] + " " + lastNames[x]
 ##################################
 
 
@@ -162,12 +174,14 @@ while True:
     
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            save(largeTextBoxes)
+            #save(largeTextBoxes)
             # Close connection to Heroku
             database.CloseConnection()
             pygame.display.quit(), sys.exit()
         # check for mouse click
         if event.type == pygame.MOUSEBUTTONDOWN:
+            if selected != NULL:
+                deselect(selected)
             clickFound = False #stops checking stuff if we've found what the mouse clicked
             for x in checkBoxes:
                 if x[1].collidepoint(pygame.mouse.get_pos()):
@@ -178,21 +192,22 @@ while True:
                     else:
                         x[0] = True
                         break
-            #if not clickFound:         #### STAYS DISABLED UNLESS WE WANT SMALL TEXT BOXES TO BE EDITABLE AGAIN
-            #     for x in smallTextBoxes:
-            #        if x[1].collidepoint(pygame.mouse.get_pos()):
-            #            clickFound = True
-            #            selected = [x, "smallTextBox"]
-            #            break
-            if not clickFound:
-                 for x in largeTextBoxes:
-                    if x[1].collidepoint(pygame.mouse.get_pos()):
+            if not clickFound:      
+                for x in range(len(smallTextBoxes)):
+                    if smallTextBoxes[x][1].collidepoint(pygame.mouse.get_pos()):
                         clickFound = True
-                        selected = [x, "largeTextBox"]
+                        selected = [smallTextBoxes[x], "smallTextBox", x]
+                        break
+            if not clickFound:
+                for x in range(len(largeTextBoxes)):
+                    if largeTextBoxes[x][1].collidepoint(pygame.mouse.get_pos()):
+                        clickFound = True
+                        selected = [largeTextBoxes[x], "largeTextBox", x]
                         break
         if event.type == pygame.KEYDOWN and selected[0] != NULL:
             if event.key == pygame.K_RETURN:
-                selected[0] = NULL
+                if selected != NULL:
+                    deselect(selected)
             elif event.key == pygame.K_BACKSPACE:
                 selected[0][0] = selected[0][0][:-1]
             else:
