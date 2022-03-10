@@ -32,12 +32,15 @@ class Database:
             query = "SELECT * from player"
             self.cursor.execute(query)
             self.record = self.cursor.fetchall()
+
+
             
             # Retrieves data from record and passes it into the info arrays
             for row in self.record:
                 self.id.append(row[0])
                 self.firstName.append(row[1])
                 self.lastName.append(row[2])
+
                 self.codeName.append(row[3])
                 # #when player team tag is added
                 # #self.playerTeam.append(row[4]) #will also need to updated in the print statement below
@@ -97,21 +100,24 @@ class Database:
 
 
     def insertFunction(self, Id, fn, ln, cn):
-            for x in range(len(fn)):  
-                try:
-                    insertQuery = "INSERT INTO PLAYER \nVALUES ( '" + str(Id[x]) + "', '" + fn[x] + "', '" + ln[x] + "', '" + cn[x] + "');"
-                    print(insertQuery)
-                    self.cursor.execute(insertQuery)
-                except(Exception, Error) as error:
-                    print("Error with insert function. \n" , error)
+            try:
+                insertQuery = "INSERT INTO PLAYER \nVALUES ( '" + str(Id) + "', '" + fn + "', '" + ln + "', '" + cn + "');"
+                print(insertQuery)
+                self.cursor.execute(insertQuery)
+                self.connection.commit()
+            except(Exception, Error) as error:
+                print("Error with insert function. \n" , error)
             print("Insert successful")
             self.connection.commit()
 
     
-    def deleteFunction(self):
-        deleteQuery = "DELETE FROM PLAYER"
-        self.cursor.execute(deleteQuery)
-        self.connection.commit() 
+    def deleteFunction(self, ID):
+        try:
+            deleteQuery = "DELETE FROM PLAYER WHERE ID='" + ID + "'"
+            self.cursor.execute(deleteQuery)
+            self.connection.commit()
+        except(Exception, Error) as error:
+            print("Error while passing in data to main program.", error)
         #for x in range (len(Id)):
         #    try:
         #        deleteQuery = "DELETE FROM PLAYER \nVALUES WHERE Id =" + "'" + Id + "'"
@@ -120,6 +126,21 @@ class Database:
         #    except(Exception, Error) as error:
         #        print("Error with delete function. \n", error)
 
+
+    def LoadName(self, ID, largeTextBox):
+        try:
+            print(ID)
+            query = "SELECT * FROM player WHERE ID = " + ID
+            print(query)
+            self.cursor.execute(query)
+            record = self.cursor.fetchall()
+            print(largeTextBox)
+            print("record")
+            print(record)
+            largeTextBox[0] = record[0][3]
+        except(Exception, Error) as error:
+            largeTextBox[0] = ""
+            print("Error while passing in data to main program.", error)
 
     def PassInformation(self, passID, passFirst, passLast, passCode):
         # Blank arrays are passed in from the main program and are filled in by
