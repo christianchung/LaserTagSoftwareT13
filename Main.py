@@ -249,13 +249,6 @@ while True:
     text = font.render("Screen", 1, (5,5,5))
     screen.blit(text, (370, 770))
 
-    # add text saving info
-    smallFont = pygame.font.Font(None, 18)
-    # pygame doesn't support multiple lines, must blit two different strings
-    text = smallFont.render("Names save to database when program closes", 1, (0,0,0))
-    screen.blit(text, (0,0))
-    text = smallFont.render("and load from database when program opens", 1, (0,0,0))
-    screen.blit(text, (0,12))
 
     # draws boxes
     for x in range(20):
