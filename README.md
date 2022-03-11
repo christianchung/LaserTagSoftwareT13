@@ -1,2 +1,4 @@
-# LaserTagSoftwareT13
-packages: import psycopg2
+How to install (windows instructions):
+install Python
+run the "INSTALL PACKAGES WITH THIS" .bat script
+run main
