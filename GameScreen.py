@@ -55,7 +55,7 @@ def countdownTimer(startOrEnd): #true if start, false if end
             if event.type == pygame.QUIT:
                 pygame.display.quit(), sys.exit()
         matchTimer += 1
-        time.sleep(0.6)
+        time.sleep(0.56)
 
 #these are just here to make starting and ending more intutive than passing a bool to the countdowntimer function
 def startGame():
@@ -197,7 +197,7 @@ def runGameScreen(redPlayers, greenPlayers):
             remainingTime = str(minutes) + ":" + str(seconds) #string to use in font.render
 
         if(isGameStart):
-            if (minutes < 1 and seconds < 6): #if game timer has 5 seconds left, call endGame() function
+            if (minutes < 1 and seconds < 9): #if game timer has 8 seconds left(allow time for match end slide), call endGame() function
                 isGameStart = False
                 endGame()
             else:

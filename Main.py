@@ -226,13 +226,20 @@ while True:
     # Team TEXTS
     # add EDIT CURRENT GAME text
     text = font.render("Edit Current Game", 1, (5,5,5)) # Black text color
-    screen.blit(text, (315, 5)) # position text on screen
+    screen.blit(text, (313, 7)) # position text on screen
+    text = font.render("Edit Current Game", 1, (5,225,255))
+    screen.blit(text, (315, 5))
 
     # add RED TEAM text
+    text = font.render("Red Team", 1, (5,5,5))
+    screen.blit(text, (148, 26))
     text = font.render("Red Team", 1, (5,225,255)) # Cyan text color
     screen.blit(text, (150, 25))
+    
 
     # add GREEN TEAM text
+    text = font.render("Green Team", 1, (5,5,5))
+    screen.blit(text, (548, 26))
     text = font.render("Green Team", 1, (5,225,255))
     screen.blit(text, (550, 25))
 
@@ -259,12 +266,12 @@ while True:
     screen.blit(text, (370, 770))
 
     # add text saving info
-    smallFont = pygame.font.Font(None, 18)
+    smallFont = pygame.font.Font(None, 14)
     # pygame doesn't support multiple lines, must blit two different strings
     text = smallFont.render("Names save to database when program closes", 1, (0,0,0))
     screen.blit(text, (0,0))
     text = smallFont.render("and load from database when program opens", 1, (0,0,0))
-    screen.blit(text, (0,12))
+    screen.blit(text, (0,8))
     
     # draws boxes
     for x in range(20):
