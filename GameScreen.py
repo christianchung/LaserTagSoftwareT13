@@ -8,8 +8,11 @@ screen = pygame.display.set_mode([800, 800])
 #=====================================================================
 #   CountDown Timer
 #=====================================================================
-def countdownTimer():     
-    matchStartText = pygame.image.load("matchStartsIn.png")
+def countdownTimer(startOrEnd): #true if start, false if end     
+    if startOrEnd:
+        matchText = pygame.image.load("matchStartsIn.png")
+    else:
+        matchText = pygame.image.load("matchEndIn.png")
     timer5 = pygame.image.load("matchStart5.png")
     timer4 = pygame.image.load("matchStart4.png")
     timer3 = pygame.image.load("matchStart3.png")
@@ -30,32 +33,35 @@ def countdownTimer():
         height = width
 
     # Scales the countdown text and nums to the size of the window
-    matchStartText = pygame.transform.scale(matchStartText, (width,height)) 
+    matchText = pygame.transform.scale(matchText, (width,height)) 
     timer5 = pygame.transform.scale(timer5, (width,height))
     timer4 = pygame.transform.scale(timer4, (width,height))
     timer3 = pygame.transform.scale(timer3, (width,height))
     timer2 = pygame.transform.scale(timer2, (width,height))
     timer1 = pygame.transform.scale(timer1, (width,height))
 
-    matchStartTimer = 0 
+    matchTimer = 0 
 
-    while (matchStartTimer < 15 * 1): # splash screen is up for 1 second
+    while (matchTimer < 15 * 1): # splash screen is up for 1 second
         screen.fill((5,225,255)) # screen filled with cyan
-        if(matchStartTimer < 4): screen.blit(matchStartText, timerPosition) 
-        elif(matchStartTimer > 4 and matchStartTimer < 6): screen.blit(timer5, timerNumPosition) 
-        elif(matchStartTimer > 6 and matchStartTimer < 8): screen.blit(timer4, timerNumPosition) 
-        elif(matchStartTimer > 8 and matchStartTimer < 10): screen.blit(timer3, timerNumPosition) 
-        elif(matchStartTimer > 10 and matchStartTimer < 12): screen.blit(timer2, timerNumPosition) 
-        elif(matchStartTimer > 12 and matchStartTimer < 14): screen.blit(timer1, timerNumPosition) 
+        if(matchTimer < 4): screen.blit(matchText, timerPosition) 
+        elif(matchTimer > 4 and matchTimer < 6): screen.blit(timer5, timerNumPosition) 
+        elif(matchTimer > 6 and matchTimer < 8): screen.blit(timer4, timerNumPosition) 
+        elif(matchTimer > 8 and matchTimer < 10): screen.blit(timer3, timerNumPosition) 
+        elif(matchTimer > 10 and matchTimer < 12): screen.blit(timer2, timerNumPosition) 
+        elif(matchTimer > 12 and matchTimer < 14): screen.blit(timer1, timerNumPosition) 
         pygame.display.flip()         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.display.quit(), sys.exit()
-        matchStartTimer += 1
+        matchTimer += 1
         time.sleep(0.6)
 
+#these are just here to make starting and ending more intutive than passing a bool to the countdowntimer function
+def startGame():
+    countdownTimer(True)
 def endGame():
-    print("placeholder function")
+    countdownTimer(False)
 
 #=====================================================================
 #   Game Screen
@@ -138,7 +144,7 @@ def runGameScreen(redPlayers, greenPlayers):
             # check for KEY clicks
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_F3:
-                    countdownTimer()
+                    startGame()
                     isGameStart = True
                     startTime = int(time.time())
                 if event.key == pygame.K_F5:
@@ -182,7 +188,7 @@ def runGameScreen(redPlayers, greenPlayers):
         text = font.render("Time Remaining:", 1, (5,5,5)) # Black text color
         screen.blit(text, (120, 620)) # position text on screen
 
-        timeElapsed = 60 - (int(time.time()) - startTime) #1 minute (600 seconds) - the time since the timer was started
+        timeElapsed = 15 - (int(time.time()) - startTime) #1 minute (600 seconds) - the time since the timer was started
         minutes = int(timeElapsed / 60) #minutes left
         seconds = timeElapsed % 60 #seconds left
         if seconds < 10: #makes sure a time like 2:1 isn't shown instead of 2:01
@@ -191,7 +197,7 @@ def runGameScreen(redPlayers, greenPlayers):
             remainingTime = str(minutes) + ":" + str(seconds) #string to use in font.render
 
         if(isGameStart):
-            if (minutes < 1 and seconds < 5): #if game timer has 5 seconds left, call endGame() function
+            if (minutes < 1 and seconds < 6): #if game timer has 5 seconds left, call endGame() function
                 isGameStart = False
                 endGame()
             else:
