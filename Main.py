@@ -289,7 +289,6 @@ while True:
         text = font.render(smallTextBoxes[x + 20][0], 1, (5,5,5))
         screen.blit(text, text.get_rect(center=(smallTextBoxes[x + 20][1].center)))
 
-    
         # large text boxes
         screen.fill((255,255,255), largeTextBoxes[x][1])
         text = font.render(largeTextBoxes[x][0], 1, (5,5,5))

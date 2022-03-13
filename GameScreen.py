@@ -154,15 +154,25 @@ def runGameScreen():
         screen.blit(text, (120, 70)) # position text on screen
 
         # add Players (Red)
-
+        redPlayers = ["Trey", "Mark", "John"]
+        playerLocation = 100
+        for x in redPlayers:
+            text = font.render(x, 1, (5,5,5)) # Black text color
+            screen.blit(text, (120, playerLocation)) # position text on screen
+            playerLocation = playerLocation + 25
 
         # add Green Team
         text = font.render("GREEN TEAM", 1, (5,5,5)) # Black text color
         screen.blit(text, (540, 70)) # position text on screen
 
         # add Players (Green)
-
-
+        greenPlayers = ["Tery", "Bob", "George"]
+        playerLocation = 100
+        for x in greenPlayers:
+            text = font.render(x, 1, (5,5,5)) # Black text color
+            screen.blit(text, (540, playerLocation)) # position text on screen
+            playerLocation = playerLocation + 25
+        
         # add Current Game Action
         text = font.render("Current Game Action", 1, (5,5,5)) # Black text color
         screen.blit(text, (280, 340)) # position text on screen
