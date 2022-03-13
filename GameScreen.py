@@ -73,6 +73,10 @@ def runGameScreen():
     smallTextBoxes = []
     largeTextBoxes = []
 
+    # Import Teams from Main
+    from Main import redPlayers
+    from Main import greenPlayers
+
     # Game Timer
     
     
@@ -154,9 +158,8 @@ def runGameScreen():
         screen.blit(text, (120, 70)) # position text on screen
 
         # add Players (Red)
-        redPlayers = ["Trey", "Mark", "John"]
         playerLocation = 100
-        for x in redPlayers:
+        for x in redPlayers[:6]:
             text = font.render(x, 1, (5,5,5)) # Black text color
             screen.blit(text, (120, playerLocation)) # position text on screen
             playerLocation = playerLocation + 25
@@ -166,9 +169,8 @@ def runGameScreen():
         screen.blit(text, (540, 70)) # position text on screen
 
         # add Players (Green)
-        greenPlayers = ["Tery", "Bob", "George"]
         playerLocation = 100
-        for x in greenPlayers:
+        for x in greenPlayers[:6]:
             text = font.render(x, 1, (5,5,5)) # Black text color
             screen.blit(text, (540, playerLocation)) # position text on screen
             playerLocation = playerLocation + 25

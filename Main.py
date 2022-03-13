@@ -257,6 +257,10 @@ while True:
     text = smallFont.render("and load from database when program opens", 1, (0,0,0))
     screen.blit(text, (0,12))
 
+    # Checked Player Arrays for Game Screen (!!! *FIX* !!!)
+    redPlayers = ["Trey", "Mark", "John"]
+    greenPlayers = ["Tery", "Bob", "George"]
+    
     # draws boxes
     for x in range(20):
         
