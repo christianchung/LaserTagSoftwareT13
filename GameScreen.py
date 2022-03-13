@@ -54,12 +54,13 @@ def countdownTimer():
         matchStartTimer += 1
         time.sleep(0.6)
 
-
+def endGame():
+    print("placeholder function")
 
 #=====================================================================
 #   Game Screen
 #=====================================================================
-def runGameScreen():
+def runGameScreen(redPlayers, greenPlayers):
 
     # light shade of the button
     checkBoxColor = (115,115,115)
@@ -70,12 +71,9 @@ def runGameScreen():
     # other variables
     iteratorCheck = True
     isGameStart = False
+    startTime = 0
     smallTextBoxes = []
     largeTextBoxes = []
-
-    # Import Teams from Main
-    from Main import redPlayers
-    from Main import greenPlayers
 
     # Game Timer
     
@@ -142,6 +140,7 @@ def runGameScreen():
                 if event.key == pygame.K_F3:
                     countdownTimer()
                     isGameStart = True
+                    startTime = int(time.time())
                 if event.key == pygame.K_F5:
                     iteratorCheck = False
 
@@ -182,7 +181,23 @@ def runGameScreen():
         # add Time Remaining
         text = font.render("Time Remaining:", 1, (5,5,5)) # Black text color
         screen.blit(text, (120, 620)) # position text on screen
-        text = font.render("Current Time", 1, (5,5,5)) # Black text color
+
+        timeElapsed = 60 - (int(time.time()) - startTime) #1 minute (600 seconds) - the time since the timer was started
+        minutes = int(timeElapsed / 60) #minutes left
+        seconds = timeElapsed % 60 #seconds left
+        if seconds < 10: #makes sure a time like 2:1 isn't shown instead of 2:01
+            remainingTime = str(minutes) + ":0" + str(seconds) #string to use in font.render (this one adds the extra 0)
+        else:
+            remainingTime = str(minutes) + ":" + str(seconds) #string to use in font.render
+
+        if(isGameStart):
+            if (minutes < 1 and seconds < 5): #if game timer has 5 seconds left, call endGame() function
+                isGameStart = False
+                endGame()
+            else:
+               text = font.render(remainingTime,  1, (5,5,5))
+        else:
+            text = font.render("10:00", 1, (5,5,5)) # Black text color
         screen.blit(text, (540, 620)) # position text on screen
 
         pygame.display.flip() # keep at end of while loop

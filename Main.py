@@ -173,7 +173,16 @@ while True:
             if event.key == pygame.K_F3:
                 print("F3")
             elif event.key == pygame.K_F5:
-                GameScreen.runGameScreen()
+                #create player list and send to game screen
+                redPlayers = []
+                greenPlayers = []
+                for x in range(len(checkBoxes)):
+                    if checkBoxes[x][0]:
+                        if x < 20:
+                            redPlayers.append(largeTextBoxes[x][0])
+                        else:
+                            greenPlayers.append(largeTextBoxes[x][0])
+                GameScreen.runGameScreen(redPlayers, greenPlayers)
         # check for mouse click
         if event.type == pygame.MOUSEBUTTONDOWN:
             if selected != None:
@@ -256,10 +265,6 @@ while True:
     screen.blit(text, (0,0))
     text = smallFont.render("and load from database when program opens", 1, (0,0,0))
     screen.blit(text, (0,12))
-
-    # Checked Player Arrays for Game Screen (!!! *FIX* !!!)
-    redPlayers = ["Trey", "Mark", "John"]
-    greenPlayers = ["Tery", "Bob", "George"]
     
     # draws boxes
     for x in range(20):
