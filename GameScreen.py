@@ -73,6 +73,10 @@ def runGameScreen():
     smallTextBoxes = []
     largeTextBoxes = []
 
+    # Game Timer
+    
+    
+
     # for x in range(20): # make 20 left check boxes 
     #     checkBoxes.append([False, pygame.Rect(20, x * 33 + 56 ,15, 15)]) # left: whether the check appears on the box or not ||| right: stored the rect for drawing and mouse detection
     # for x in range(20): # make 20 right check boxes 
@@ -100,8 +104,10 @@ def runGameScreen():
         screen.fill((115,115,115), (0, 720, screen.get_width(), screen.get_height()/10)) # fill Bottom bar for Functions with GRAY
 
         # add GAME ACTIONS BOX
-        screen.fill((255,255,255), pygame.Rect(50, 50, 700, 400))
-        pygame.draw.rect(screen, (25,25,25), pygame.Rect(45, 45, 705, 411), 10, 10)
+        screen.fill((255,255,255), pygame.Rect(50, 50, 700, 600))
+        pygame.draw.rect(screen, (25,25,25), pygame.Rect(45, 45, 705, 611), 10, 10) # Full box
+        pygame.draw.rect(screen, (25,25,25), pygame.Rect(45, 45, 705, 280), 10, 10) # Team divider
+        pygame.draw.rect(screen, (25,25,25), pygame.Rect(45, 45, 705, 570), 10, 10) # Time divider
 
         # add F3 BOX
         pygame.draw.rect(screen, (5,5,5), pygame.Rect(265, 723, 80, 75), 2, 10)
@@ -143,5 +149,28 @@ def runGameScreen():
         text = font.render("Game Stats", 1, (5,5,5)) # Black text color
         screen.blit(text, (320, 10)) # position text on screen
 
+        # add Red Team
+        text = font.render("RED TEAM", 1, (5,5,5)) # Black text color
+        screen.blit(text, (120, 70)) # position text on screen
+
+        # add Players (Red)
+
+
+        # add Green Team
+        text = font.render("GREEN TEAM", 1, (5,5,5)) # Black text color
+        screen.blit(text, (540, 70)) # position text on screen
+
+        # add Players (Green)
+
+
+        # add Current Game Action
+        text = font.render("Current Game Action", 1, (5,5,5)) # Black text color
+        screen.blit(text, (280, 340)) # position text on screen
+
+        # add Time Remaining
+        text = font.render("Time Remaining:", 1, (5,5,5)) # Black text color
+        screen.blit(text, (120, 620)) # position text on screen
+        text = font.render("Current Time", 1, (5,5,5)) # Black text color
+        screen.blit(text, (540, 620)) # position text on screen
 
         pygame.display.flip() # keep at end of while loop
