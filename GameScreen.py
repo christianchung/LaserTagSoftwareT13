@@ -188,7 +188,7 @@ def runGameScreen(redPlayers, greenPlayers):
         text = font.render("Time Remaining:", 1, (5,5,5)) # Black text color
         screen.blit(text, (120, 620)) # position text on screen
 
-        timeElapsed = 15 - (int(time.time()) - startTime) #1 minute (600 seconds) - the time since the timer was started
+        timeElapsed = 600 - (int(time.time()) - startTime) #10 minutes (600 seconds) - the time since the timer was started
         minutes = int(timeElapsed / 60) #minutes left
         seconds = timeElapsed % 60 #seconds left
         if seconds < 10: #makes sure a time like 2:1 isn't shown instead of 2:01
