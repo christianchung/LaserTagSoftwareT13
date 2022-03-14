@@ -10,7 +10,7 @@ class Database:
             self.cursor = None
             self.record = None
             
-            #This identifies the database conneciton on Heroku
+            #Connects to database on Heroku
             self.connection = psycopg2.connect(user="aigprmbvspqgeb", 
                                         password="9fc89e2a58804e0d9132b626a88d1788e34c733bf9fed01188ad9c5726974632", 
                                         host="ec2-44-193-188-118.compute-1.amazonaws.com", 
@@ -32,23 +32,65 @@ class Database:
             query = "SELECT * from player"
             self.cursor.execute(query)
             self.record = self.cursor.fetchall()
+
+
             
             # Retrieves data from record and passes it into the info arrays
             for row in self.record:
                 self.id.append(row[0])
                 self.firstName.append(row[1])
                 self.lastName.append(row[2])
+
                 self.codeName.append(row[3])
-            
+               
+                
+            # DEBUGGING    
             # Prints array contents/attributes to console)
-            for x in range(len(self.id)):
-                print(f" id: {self.id[x]} \n First Name: {self.firstName[x]} \n Last Name: {self.lastName[x]} \n Code Name: {self.codeName[x]} \n\n")
+            # for x in range(len(self.id)):
+            # print(f" id: {self.id[x]} \n First Name: {self.firstName[x]} \n Last Name: {self.lastName[x]} \n Code Name: {self.codeName[x]} \n\n")
+
         except(Exception, Error) as error:
             print("Error while executing query.", error)
 
+
+
+    def insertFunction(self, Id, fn, ln, cn):
+            try:
+                insertQuery = "INSERT INTO PLAYER \nVALUES ( '" + str(Id) + "', '" + fn + "', '" + ln + "', '" + cn + "');"
+                print(insertQuery)
+                self.cursor.execute(insertQuery)
+                self.connection.commit()
+            except(Exception, Error) as error:
+                print("Error with insert function. \n" , error)
+            print("Insert successful")
+            self.connection.commit()
+
+    
+    def deleteFunction(self, ID):
+        try:
+            deleteQuery = "DELETE FROM PLAYER WHERE ID='" + ID + "'"
+            self.cursor.execute(deleteQuery)
+            self.connection.commit()
+        except(Exception, Error) as error:
+            print("Error while passing in data to main program.", error)
+
+
+    def LoadName(self, ID, largeTextBox):
+        try:
+            print(ID)
+            query = "SELECT * FROM player WHERE ID = " + ID
+            print(query)
+            self.cursor.execute(query)
+            record = self.cursor.fetchall()
+            print(largeTextBox)
+            print("record")
+            print(record)
+            largeTextBox[0] = record[0][3]
+        except(Exception, Error) as error:
+            largeTextBox[0] = ""
+            print("Error while passing in data to main program.", error)
+
     def PassInformation(self, passID, passFirst, passLast, passCode):
-        # Blank arrays are passed in from the main program and are filled in by
-        # elements of the arrays storing info from the database
         try:
             for x in self.id:
                 passID.append(x)
@@ -69,62 +111,3 @@ class Database:
             self.cursor.close()
             self.connection.close()
             print("PostgreSQL connection is closed")
-
-
-
-
-# try:
-    # #This identifies the database conneciton on Heroku
-    # connection = psycopg2.connect(user="aigprmbvspqgeb", 
-                                  # password="9fc89e2a58804e0d9132b626a88d1788e34c733bf9fed01188ad9c5726974632", 
-                                  # host="ec2-44-193-188-118.compute-1.amazonaws.com", 
-                                  # port="5432", 
-                                  # database="d2d6m26rbfjgmi")
-
-    # cursor = connection.cursor()
-
-    # #print postgresql details
-    # # print("PostgreSQL server information")
-    # # print(connection.get_dsn_parameters(), "\n")
-
-# #######################################################################################
-    # #initialize arrays
-    # # ARRAYS THAT STORE THE INFORMATION
-    # id = []
-    # firstName = []
-    # lastName = []
-    # codeName = []
-# ##########################################################################################
-
-    # #execute insert query
-    # # insertQuery = "INSERT INTO player (id, first_name, last_name, codename) VALUES (2, 'Christian', 'Chung', 'danger');"
-    # # cursor.execute(insertQuery)
-
-    # #executing a SQL query
-    # query = "SELECT * from player"
-    # cursor.execute(query)
-    # #stores all from player table in record
-    # record = cursor.fetchall()
-    
-    # #retrieves from record and adds to the arrays
-    # for row in record:
-        # id.append(row[0])
-        # firstName.append(row[1])
-        # lastName.append(row[2])
-        # codeName.append(row[3])
-
-    # #prints to console the contents of all the arrays(the attributes)
-    # for x in range(len(id)):
-        # print(f" id: {id[x]} \n First Name: {firstName[x]} \n Last Name: {lastName[x]} \n Code Name: {codeName[x]} \n\n")
-
-# #if fail to connect
-# except(Exception, Error) as error:
-    # print("Error while connecting to PostgreSQL", error)
-
-# finally:
-    # #closing database connection
-    # if(connection):
-        # cursor.close()
-        # connection.close()
-        # print("PostgreSQL connection is closed")
-

@@ -1,12 +1,11 @@
-from asyncio.windows_events import NULL
-from cgitb import small
-from select import select
-from msilib.schema import CheckBox
-from Database import Database
 import sys
+from database import Database
 import pygame
-import tkinter
 import time # for the sleep function
+import GameScreen
+
+pygame.init()
+screen = pygame.display.set_mode([800, 800])
 
 #=====================================================================
 #   Pass in database info from Database.py
@@ -21,34 +20,38 @@ idNumbers = []
 firstNames = []
 lastNames = []
 codeNames = []
-fullNames = []
 
 # Passes the database info from Database.py into here
-database.PassInformation(idNumbers, firstNames, lastNames, codeNames)
+database.PassInformation(idNumbers, firstNames, lastNames, codeNames) 
 
-x = 0
-while x < len(firstNames):
-    fullNames.append(firstNames[x] + " " + lastNames[x])
-    x += 1
+# DEBUGGING print statements
+#print(idNumbers)
+#print(firstNames)
+#print(lastNames)
+#print(codeNames)
 
-# Test to make sure data is passed in correctly
-print(idNumbers)
-print(firstNames)
-print(lastNames)
-print(codeNames)
 
-# Close connection to Heroku
-database.CloseConnection()
+
+#For when a text box is deslected, happens if user clicks or presses enter while typing in a box
+def deselect(selected):
+    if(selected[1] == "smallTextBox" and selected[0][0].replace(" ", "") != ""): # if it's a small text box and has a valid id excluding spaces        
+        database.LoadName(selected[0][0], largeTextBoxes[selected[2]])    
+
+        print("loaded player!")  #change to show on screen later
+    elif(selected[1] == "largeTextBox" and smallTextBoxes[selected[2]][0].replace(" ", "") != ""): # if it's a large text box and the small text box beside it has an ID
+        database.deleteFunction(smallTextBoxes[selected[2]][0]) #deletes player at id of neighboring small text box
+        if(selected[0][0] != "" and selected[0][0] != " "): #if the name is empty then the id associated with it gets deleted and not re-inserted
+            database.insertFunction(smallTextBoxes[selected[2]][0], " ", " ", selected[0][0])
+
+    selected = None
+    
+
 
 #=====================================================================
 #   Splash Screen
 #=====================================================================
-
-pygame.init()
-screen = pygame.display.set_mode([800, 800])
-
 splashScreen = pygame.image.load("splashScreen2.png")
-width, height = screen.get_size()
+width, height = pygame.display.get_surface().get_size()
 splashScreenPosition = (0,0) # splashscreen is positioned at the top left corner of the screen
 
 # following lines just prevent the splash screen from stretching if the window is rectangular
@@ -78,14 +81,13 @@ while (splashScreenTimer < 5 * 1): # splash screen is up for 1 second
 # light shade of the button
 checkBoxColor = (115,115,115)
 checkBoxColorHover = (75,75,75)
-# print(pygame.font.get_fonts())        # gets all fonts on system
+
 # initialize font to (defualt pygame font, fontSize)
 font = pygame.font.Font(None, 30)
 
 # other variables
 checkMark = pygame.image.load("checkMark.png")
 checkMark = pygame.transform.scale(checkMark, (30, 30))
-
 checkBoxes = []
 smallTextBoxes = []
 largeTextBoxes = []
@@ -105,40 +107,8 @@ for x in range(20): # make 20 left large text boxes
 for x in range(20): # make 20 right large text boxes 
     largeTextBoxes.append(["", pygame.Rect(560, x * 33 + 50, 235, 30)]) 
 
-selected = [NULL, ""] #stores the currently selected textbox and the type of textbox (large or small) it is
+selected = [None, ""] #stores the currently selected textbox and the type of textbox (large or small) it is
 
-#==================LOAD THE PLAYER LIST HERE==================#
-
-#Change variable names to whatever fits best, all loading is done right here and the variables are not used again later
-leftSideSmallText = codeNames
-rightSideSmallText = codeNames
-
-leftSidelargeText = fullNames
-rightSidelargeText = fullNames
-
-
-### load data into arrays here ###
-
-
-##################################
-
-
-#small text box loading:
-for x in range(len(leftSideSmallText)):
-     smallTextBoxes[x][0] = leftSideSmallText[x]
-
-for x in range(len(rightSideSmallText)):
-     smallTextBoxes[x + 20][0] = rightSideSmallText[x]
-
-# large text box loading:
-for x in range(len(leftSidelargeText)):
-     largeTextBoxes[x][0] = leftSidelargeText[x]
-
-for x in range(len(rightSidelargeText)):
-     largeTextBoxes[x + 20][0] = rightSidelargeText[x]
-
-
-#=============================================================#
 
 while True:
     screen.fill((0,195,0)) # fill screen with GREEN
@@ -147,10 +117,29 @@ while True:
     
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            #save(largeTextBoxes)
+            # Close connection to Heroku
+            database.CloseConnection()
             pygame.display.quit(), sys.exit()
-
+        # KEY clicks
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_F3:
+                print("F3")
+            elif event.key == pygame.K_F5:
+                #create player list and send to game screen
+                redPlayers = []
+                greenPlayers = []
+                for x in range(len(checkBoxes)):
+                    if checkBoxes[x][0]:
+                        if x < 20:
+                            redPlayers.append(largeTextBoxes[x][0])
+                        else:
+                            greenPlayers.append(largeTextBoxes[x][0])
+                GameScreen.runGameScreen(redPlayers, greenPlayers)
         # check for mouse click
         if event.type == pygame.MOUSEBUTTONDOWN:
+            if selected != None:
+                deselect(selected)
             clickFound = False #stops checking stuff if we've found what the mouse clicked
             for x in checkBoxes:
                 if x[1].collidepoint(pygame.mouse.get_pos()):
@@ -161,21 +150,22 @@ while True:
                     else:
                         x[0] = True
                         break
-            if not clickFound:
-                 for x in smallTextBoxes:
-                    if x[1].collidepoint(pygame.mouse.get_pos()):
+            if not clickFound:      
+                for x in range(len(smallTextBoxes)):
+                    if smallTextBoxes[x][1].collidepoint(pygame.mouse.get_pos()):
                         clickFound = True
-                        selected = [x, "smallTextBox"]
+                        selected = [smallTextBoxes[x], "smallTextBox", x]
                         break
             if not clickFound:
-                 for x in largeTextBoxes:
-                    if x[1].collidepoint(pygame.mouse.get_pos()):
+                for x in range(len(largeTextBoxes)):
+                    if largeTextBoxes[x][1].collidepoint(pygame.mouse.get_pos()):
                         clickFound = True
-                        selected = [x, "largeTextBox"]
+                        selected = [largeTextBoxes[x], "largeTextBox", x]
                         break
-        if event.type == pygame.KEYDOWN and selected[0] != NULL:
+        if event.type == pygame.KEYDOWN and selected[0] != None:
             if event.key == pygame.K_RETURN:
-                selected[0] = NULL
+                if selected != None:
+                    deselect(selected)
             elif event.key == pygame.K_BACKSPACE:
                 selected[0][0] = selected[0][0][:-1]
             else:
@@ -186,36 +176,70 @@ while True:
                     if len(selected[0][0]) < 18:
                         selected[0][0] += event.unicode
 
-
-
-
-    # Team texts
+    # Team TEXTS
     # add EDIT CURRENT GAME text
     text = font.render("Edit Current Game", 1, (5,5,5)) # Black text color
-    screen.blit(text, (320, 5)) # position text on screen
+    screen.blit(text, (313, 7)) # position text on screen
+    text = font.render("Edit Current Game", 1, (5,225,255))
+    screen.blit(text, (315, 5))
 
     # add RED TEAM text
+    text = font.render("Red Team", 1, (5,5,5))
+    screen.blit(text, (148, 26))
     text = font.render("Red Team", 1, (5,225,255)) # Cyan text color
     screen.blit(text, (150, 25))
+    
 
     # add GREEN TEAM text
+    text = font.render("Green Team", 1, (5,5,5))
+    screen.blit(text, (548, 26))
     text = font.render("Green Team", 1, (5,225,255))
     screen.blit(text, (550, 25))
 
+    # add F3 BOX
+    pygame.draw.rect(screen, (5,5,5), pygame.Rect(265, 723, 80, 75), 2, 10)
+
+    # add F3 and RUN GAME text
+    text = font.render("F3", 1, (5,5,5))
+    screen.blit(text, (280, 730))
+    text = font.render("Empty", 1, (5,5,5))
+    screen.blit(text, (280, 750))
+    text = font.render("Task", 1, (5,5,5))
+    screen.blit(text, (280, 770))
+
+    # add F5 BOX
+    pygame.draw.rect(screen, (5,5,5), pygame.Rect(365, 723, 80, 75), 2, 10)
+
+    # add F5 and GAME SCREEN text
+    text = font.render("F5", 1, (5,5,5))
+    screen.blit(text, (370, 730))
+    text = font.render("Game", 1, (5,5,5))
+    screen.blit(text, (370, 750))
+    text = font.render("Screen", 1, (5,5,5))
+    screen.blit(text, (370, 770))
+
+    # add text saving info
+    smallFont = pygame.font.Font(None, 14)
+    # pygame doesn't support multiple lines, must blit two different strings
+    text = smallFont.render("Names save to database when program closes", 1, (0,0,0))
+    screen.blit(text, (0,0))
+    text = smallFont.render("and load from database when program opens", 1, (0,0,0))
+    screen.blit(text, (0,8))
+    
     # draws boxes
     for x in range(20):
         
         # check boxes
         # left boxes
         if checkBoxes[x][1].collidepoint(pygame.mouse.get_pos()): #checks if mouse hovering over
-            pygame.draw.rect(screen, (55,55,55), checkBoxes[x][1], 3)
+            pygame.draw.rect(screen, (55,55,55), checkBoxes[x][1], 2, 3)
         else:
-            pygame.draw.rect(screen, (5,5,5), checkBoxes[x][1], 3)
+            pygame.draw.rect(screen, (5,5,5), checkBoxes[x][1], 2, 3)
         # right boxes
         if checkBoxes[x + 20][1].collidepoint(pygame.mouse.get_pos()):
-            pygame.draw.rect(screen, (55,55,55), checkBoxes[x + 20][1], 3)
+            pygame.draw.rect(screen, (55,55,55), checkBoxes[x + 20][1], 2, 3)
         else:
-            pygame.draw.rect(screen, (5,5,5), checkBoxes[x + 20][1], 3)
+            pygame.draw.rect(screen, (5,5,5), checkBoxes[x + 20][1], 2, 3)
 
         # checks
         # left checks
@@ -234,7 +258,6 @@ while True:
         text = font.render(smallTextBoxes[x + 20][0], 1, (5,5,5))
         screen.blit(text, text.get_rect(center=(smallTextBoxes[x + 20][1].center)))
 
-    
         # large text boxes
         screen.fill((255,255,255), largeTextBoxes[x][1])
         text = font.render(largeTextBoxes[x][0], 1, (5,5,5))
