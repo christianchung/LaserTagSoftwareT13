@@ -24,36 +24,12 @@ codeNames = []
 # Passes the database info from Database.py into here
 database.PassInformation(idNumbers, firstNames, lastNames, codeNames) 
 
-# Test to make sure data is passed in correctly
+# DEBUGGING print statements
 #print(idNumbers)
 #print(firstNames)
 #print(lastNames)
 #print(codeNames)
 
-# def save(largeTextBoxes): #program saves on exit
-#     idNumbers = []
-#     firstNames = []
-#     lastNames = []
-#     codeNames = []
-    
-#     for x in range(len(largeTextBoxes)):
-#         if(len(largeTextBoxes[x][0]) > 2): #names aren't saved if they're too short (at least 3 characters required)
-#             if " " in largeTextBoxes[x][0][1:len(largeTextBoxes[x][0]) - 2]: #if the string contains a space that isn't at the start or end of the string
-#                 idNumbers.append(x)
-#                 firstNames.append(largeTextBoxes[x][0].split()[0])
-#                 lastNames.append(largeTextBoxes[x][0].split()[len(largeTextBoxes[x][0].split()) - 1])
-#                 codeNames.append(largeTextBoxes[x][0].split()[0][0:1] + largeTextBoxes[x][0].split()[1][0:1]) #codename is made from first initial + last initial
-#             else:
-#                 idNumbers.append(x)
-#                 largeTextBoxes[x][0].replace(" ", "") 
-#                 firstNames.append(largeTextBoxes[x][0])
-#                 lastNames.append(" ")
-#                 codeNames.append(largeTextBoxes[x][0][0:2]) #codename is made from first 2 letters of input name if no spaces
-#     #### Add code to export finalized arrays before closing the connection and exiting the program ####   
-#     database.deleteFunction()
-#     database.insertFunction(idNumbers, firstNames, lastNames, codeNames)
-
-#     ###################################################################################################
 
 
 #For when a text box is deslected, happens if user clicks or presses enter while typing in a box
@@ -133,29 +109,6 @@ for x in range(20): # make 20 right large text boxes
 
 selected = [None, ""] #stores the currently selected textbox and the type of textbox (large or small) it is
 
-#==================LOAD THE PLAYER LIST HERE==================#
-
-#Change variable names to whatever fits best, all loading is done right here and the variables are not used again later
-
-### load data into arrays here ###
-# this loads up the IDs (never changes)
-# for x in range(20):
-#     if x < 10: # makes sure every text box on the left has 2 digits
-#         smallTextBoxes[x][0] = ("0" + str(x)) 
-#     else:
-#         smallTextBoxes[x][0] = (str(x)) 
-#     smallTextBoxes[x+20][0] = (str(x + 20)) #right text boxes
-        
-# # this loads up the text boxes
-# for x in range(len(firstNames)):
-#     if firstNames[x] == " ": # check if there's a first
-#         largeTextBoxes[x] = "" #if not, insert blank
-#     elif lastNames[x] == " ": # check if there's a last name for this entry
-#         largeTextBoxes[idNumbers[x]][0] = firstNames[x] # if not, only insert first name
-#     else:
-#         largeTextBoxes[idNumbers[x]][0] = firstNames[x] + " " + lastNames[x]
-
-#=============================================================#
 
 while True:
     screen.fill((0,195,0)) # fill screen with GREEN
@@ -173,7 +126,16 @@ while True:
             if event.key == pygame.K_F3:
                 print("F3")
             elif event.key == pygame.K_F5:
-                GameScreen.runGameScreen()
+                #create player list and send to game screen
+                redPlayers = []
+                greenPlayers = []
+                for x in range(len(checkBoxes)):
+                    if checkBoxes[x][0]:
+                        if x < 20:
+                            redPlayers.append(largeTextBoxes[x][0])
+                        else:
+                            greenPlayers.append(largeTextBoxes[x][0])
+                GameScreen.runGameScreen(redPlayers, greenPlayers)
         # check for mouse click
         if event.type == pygame.MOUSEBUTTONDOWN:
             if selected != None:
@@ -217,13 +179,20 @@ while True:
     # Team TEXTS
     # add EDIT CURRENT GAME text
     text = font.render("Edit Current Game", 1, (5,5,5)) # Black text color
-    screen.blit(text, (315, 5)) # position text on screen
+    screen.blit(text, (313, 7)) # position text on screen
+    text = font.render("Edit Current Game", 1, (5,225,255))
+    screen.blit(text, (315, 5))
 
     # add RED TEAM text
+    text = font.render("Red Team", 1, (5,5,5))
+    screen.blit(text, (148, 26))
     text = font.render("Red Team", 1, (5,225,255)) # Cyan text color
     screen.blit(text, (150, 25))
+    
 
     # add GREEN TEAM text
+    text = font.render("Green Team", 1, (5,5,5))
+    screen.blit(text, (548, 26))
     text = font.render("Green Team", 1, (5,225,255))
     screen.blit(text, (550, 25))
 
@@ -249,7 +218,14 @@ while True:
     text = font.render("Screen", 1, (5,5,5))
     screen.blit(text, (370, 770))
 
-
+    # add text saving info
+    smallFont = pygame.font.Font(None, 14)
+    # pygame doesn't support multiple lines, must blit two different strings
+    text = smallFont.render("Names save to database when program closes", 1, (0,0,0))
+    screen.blit(text, (0,0))
+    text = smallFont.render("and load from database when program opens", 1, (0,0,0))
+    screen.blit(text, (0,8))
+    
     # draws boxes
     for x in range(20):
         
@@ -282,7 +258,6 @@ while True:
         text = font.render(smallTextBoxes[x + 20][0], 1, (5,5,5))
         screen.blit(text, text.get_rect(center=(smallTextBoxes[x + 20][1].center)))
 
-    
         # large text boxes
         screen.fill((255,255,255), largeTextBoxes[x][1])
         text = font.render(largeTextBoxes[x][0], 1, (5,5,5))
