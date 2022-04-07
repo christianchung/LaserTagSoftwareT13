@@ -8,4 +8,3 @@ Requirements / Libraries:
 - Newest version of Python
 - psycopg2
 - pygame
-- tkinter
