@@ -1,6 +1,7 @@
 import sys
 import pygame
 import time # for the sleep function
+import udp
 
 pygame.init()
 
@@ -80,10 +81,8 @@ def runGameScreen(redPlayers, greenPlayers):
     startTime = 0
     smallTextBoxes = []
     largeTextBoxes = []
+    gameEvents = ["test","test","test","test","test","test","test","test","test"]
 
-    # Game Timer
-    
-    
 
     # for x in range(20): # make 20 left check boxes 
     #     checkBoxes.append([False, pygame.Rect(20, x * 33 + 56 ,15, 15)]) # left: whether the check appears on the box or not ||| right: stored the rect for drawing and mouse detection
@@ -161,28 +160,44 @@ def runGameScreen(redPlayers, greenPlayers):
         # add Red Team
         text = font.render("RED TEAM", 1, (5,5,5)) # Black text color
         screen.blit(text, (120, 70)) # position text on screen
+        text = font.render("total score", 1, (5,5,5)) # Black text color
+        screen.blit(text, (80, 285)) # position text on screen
 
         # add Players (Red)
         playerLocation = 100
+        score = 0000
         for x in redPlayers[:6]:
-            text = font.render(x, 1, (5,5,5)) # Black text color
+            text = font.render(x + "   " + str(score), 1, (5,5,5)) # Black text color
             screen.blit(text, (120, playerLocation)) # position text on screen
             playerLocation = playerLocation + 25
 
         # add Green Team
         text = font.render("GREEN TEAM", 1, (5,5,5)) # Black text color
         screen.blit(text, (540, 70)) # position text on screen
+        text = font.render("total score", 1, (5,5,5)) # Black text color
+        screen.blit(text, (620, 285)) # position text on screen
 
         # add Players (Green)
         playerLocation = 100
+        score = 0000
         for x in greenPlayers[:6]:
-            text = font.render(x, 1, (5,5,5)) # Black text color
+            text = font.render(x + "   " + str(score), 1, (5,5,5)) # Black text color
             screen.blit(text, (540, playerLocation)) # position text on screen
             playerLocation = playerLocation + 25
         
         # add Current Game Action
         text = font.render("Current Game Action", 1, (5,5,5)) # Black text color
         screen.blit(text, (280, 340)) # position text on screen
+
+        # add Game Events (*FIX*)
+        actionLocation = 375
+        if udp.data != "":
+            for x in udp.data:
+                gameEvents[x] = x[0].decode()
+        for y in gameEvents[:9]:
+            text = font.render(y, 1, (5,5,5)) # Black text color
+            screen.blit(text, (120, actionLocation)) # position text on screen
+            actionLocation = actionLocation + 25
 
         # add Time Remaining
         text = font.render("Time Remaining:", 1, (5,5,5)) # Black text color
