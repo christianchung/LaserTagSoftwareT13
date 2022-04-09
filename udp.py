@@ -12,10 +12,7 @@ class udpsocket:
 
     # use initlizeSocket("127.0.0.1", 7051) unless something changes
     def initlizeSocket(self):  
-        
-        # global UDP_IP     # global keywords grabs the global variables instead of re-declaring them in the function
-        # global UDP_PORT
-        # global sock
+
         self.sock.bind((self.UDP_IP, self.UDP_PORT))
         self.sock.settimeout(.1)
 
@@ -34,7 +31,7 @@ class udpsocket:
     def runSocket(self, team1, team2):
 
         self.initlizeSocket()
-        udpTester.intializeTester(self.UDP_IP, self.UDP_PORT, team1, team2)
+        udpTester.initializeTester(self.UDP_IP, self.UDP_PORT, team1, team2)
         while(True):
             time.sleep(1)
             udpTester.generateInteraction()
@@ -44,16 +41,6 @@ class udpsocket:
                 print(x[0].decode())
 
 
-
-# test code (run udp.py by itself with this if you need to verify that the connection)
-# socketDetails = ["127.0.0.1", 7501]
-# initlizeSocket(socketDetails[0], socketDetails[1])
-# tester = udpTester
-# udpTester.initializeTester(socketDetails[0], socketDetails[1], ["rick", "bob"], ["tony", "jim"])
-# while(True):
-#    time.sleep(1)
-#    udpTester.generateInteraction()
-#    udpTester.generateInteraction()
-#    data = getData()
-#    for x in data:
-#        print(x[0].decode())
+#test the program: to run, uncomment below and in console "python3 udp.py"
+# newSocket = udpsocket()
+# newSocket.runSocket(["rick", "bob"], ["tony", "jim"])
