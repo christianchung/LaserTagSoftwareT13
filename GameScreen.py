@@ -6,6 +6,9 @@ from udp import udpsocket
 pygame.init()
 
 screen = pygame.display.set_mode([800, 800])
+font = pygame.font.Font(None, 30)
+redScore = 0
+greenScore = 0
 #=====================================================================
 #   CountDown Timer
 #=====================================================================
@@ -58,6 +61,25 @@ def countdownTimer(startOrEnd): #true if start, false if end
         matchTimer += 1
         time.sleep(0.56)
 
+def pointTracker(redPoints, greenPoints, player):
+    global redScore
+    global greenScore
+    # White text to clean up text blur
+    text = font.render(str(redScore), 1, (255,255,255)) 
+    screen.blit(text, (190, 285)) 
+    text = font.render(str(greenScore), 1, (255,255,255)) 
+    screen.blit(text, (705, 285)) 
+
+    redScore += redPoints
+    greenScore += greenPoints
+
+    # Update Score
+    text = font.render(str(redScore), 1, (195,5,5)) 
+    screen.blit(text, (190, 285)) 
+    text = font.render(str(greenScore), 1, (5,195,5)) 
+    screen.blit(text, (705, 285)) 
+    time.sleep(0.1)
+
 #these are just here to make starting and ending more intutive than passing a bool to the countdowntimer function
 def startGame():
     countdownTimer(True)
@@ -71,10 +93,7 @@ def runGameScreen(redPlayers, greenPlayers):
     udps = udpsocket()
     udps.initlizeSocket()
     udps.getTeam(redPlayers, greenPlayers)
-    
-    # light shade of the button
-    checkBoxColor = (115,115,115)
-    checkBoxColorHover = (75,75,75)
+
     # initialize font to (defualt pygame font, fontSize)
     font = pygame.font.Font(None, 30)
 
@@ -84,7 +103,7 @@ def runGameScreen(redPlayers, greenPlayers):
     startTime = 0
     smallTextBoxes = []
     largeTextBoxes = []
-    gameEvents = ["test","test","test","test","test","test","test","test","test"]
+    gameEvents = ["-","-","-","-","-","-","-","-","-"]
 
 
     # for x in range(20): # make 20 left check boxes 
@@ -178,7 +197,7 @@ def runGameScreen(redPlayers, greenPlayers):
         text = font.render("GREEN TEAM", 1, (5,5,5)) # Black text color
         screen.blit(text, (540, 70)) # position text on screen
         text = font.render("total score", 1, (5,5,5)) # Black text color
-        screen.blit(text, (620, 285)) # position text on screen
+        screen.blit(text, (595, 285)) # position text on screen
 
         # add Players (Green)
         playerLocation = 100
@@ -210,7 +229,6 @@ def runGameScreen(redPlayers, greenPlayers):
             text = font.render(y, 1, (5,5,5)) # Black text color
             screen.blit(text, (120, actionLocation)) # position text on screen
             actionLocation = actionLocation + 25
-        
 
         # add Time Remaining
         text = font.render("Time Remaining:", 1, (5,5,5)) # Black text color

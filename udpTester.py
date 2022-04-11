@@ -1,6 +1,7 @@
 import socket
 import random
 import time
+import GameScreen
 
 UDP_IP = ""
 UDP_PORT = 0
@@ -29,10 +30,14 @@ def generateInteraction():  # sends a random interaction to the udp port
             message = "Red player " + redPlayer + " hit green player " + greenPlayer + "!"
             message = message.encode()
             sock.sendto(message, (UDP_IP, UDP_PORT))
+            GameScreen.pointTracker(10,0, redPlayer) # Update points Red
+            time.sleep(0.1)
         else:
             message = "Green player " + greenPlayer + " hit red player " + redPlayer + "!"
             message = message.encode()
             sock.sendto(message, (UDP_IP, UDP_PORT))
+            GameScreen.pointTracker(0,10, greenPlayer) # Update Points Green
+            time.sleep(0.1)
     else:
         sock.sendto("At least one team is empty, can't generate interaction", (UDP_IP, UDP_PORT))
 
