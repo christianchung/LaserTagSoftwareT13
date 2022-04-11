@@ -109,31 +109,12 @@ def runGameScreen(redPlayers, greenPlayers):
     gameEvents = ["-","-","-","-","-","-","-","-","-"]
     global GameON
 
-
-    # for x in range(20): # make 20 left check boxes 
-    #     checkBoxes.append([False, pygame.Rect(20, x * 33 + 56 ,15, 15)]) # left: whether the check appears on the box or not ||| right: stored the rect for drawing and mouse detection
-    # for x in range(20): # make 20 right check boxes 
-    #     checkBoxes.append([False, pygame.Rect(420, x * 33 + 56 ,15, 15)]) # left: whether the check appears on the box or not ||| right: stored the rect for drawing and mouse detection
-
-    # for x in range(20): # make 20 left small text boxes
-    #     smallTextBoxes.append(["", pygame.Rect(40, x * 33 + 50, 115, 30)]) 
-    # for x in range(20): # make 20 right small text boxes 
-    #     smallTextBoxes.append(["", pygame.Rect(440, x * 33 + 50, 115, 30)]) 
-
-    # for x in range(20): # make 20 left large text boxes 
-    #     largeTextBoxes.append(["", pygame.Rect(160, x * 33 + 50, 235, 30)]) 
-    # for x in range(20): # make 20 right large text boxes 
-    #     largeTextBoxes.append(["", pygame.Rect(560, x * 33 + 50, 235, 30)]) 
-
-    # selected = [None, ""] #stores the currently selected textbox and the type of textbox (large or small) it is
-
     #=============================================================#
     #   LOOP
     #=============================================================#
 
     while iteratorCheck == True:
         screen.fill((5,225,255)) # fill screen with CYAN
-        # %%screen.fill((100,100,100), (0, 0, screen.get_width() / 2, screen.get_height())) # leaderboard
         screen.fill((115,115,115), (0, 720, screen.get_width(), screen.get_height()/10)) # fill Bottom bar for Functions with GRAY
 
         # add GAME ACTIONS BOX
@@ -223,14 +204,8 @@ def runGameScreen(redPlayers, greenPlayers):
         actionLocation = 375
         if udps.cleandata != "":
             for x in udps.cleandata:
-                # gameEvents[i] = x[0].decode()
                 gameEvents.append(x)
-        # print(gameEvents)
-        # for y in gameEvents[:9]:
         for y in gameEvents[-9:]:
-            # x = y.split
-            # print(y)
-            print(y.split())
             if isGameStart == 1:
                 text = font.render(y, 1, (5,5,5)) # Black text color
                 screen.blit(text, (120, actionLocation)) # position text on screen

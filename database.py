@@ -33,26 +33,15 @@ class Database:
             self.cursor.execute(query)
             self.record = self.cursor.fetchall()
 
-
-            
             # Retrieves data from record and passes it into the info arrays
             for row in self.record:
                 self.id.append(row[0])
                 self.firstName.append(row[1])
                 self.lastName.append(row[2])
-
                 self.codeName.append(row[3])
-               
-                
-            # DEBUGGING    
-            # Prints array contents/attributes to console)
-            # for x in range(len(self.id)):
-            # print(f" id: {self.id[x]} \n First Name: {self.firstName[x]} \n Last Name: {self.lastName[x]} \n Code Name: {self.codeName[x]} \n\n")
 
         except(Exception, Error) as error:
             print("Error while executing query.", error)
-
-
 
     def insertFunction(self, Id, fn, ln, cn):
             try:
@@ -65,7 +54,7 @@ class Database:
             print("Insert successful")
             self.connection.commit()
 
-    
+
     def deleteFunction(self, ID):
         try:
             deleteQuery = "DELETE FROM PLAYER WHERE ID='" + ID + "'"

@@ -25,14 +25,6 @@ codeNames = []
 # Passes the database info from Database.py into here
 database.PassInformation(idNumbers, firstNames, lastNames, codeNames) 
 
-# DEBUGGING print statements
-#print(idNumbers)
-#print(firstNames)
-#print(lastNames)
-#print(codeNames)
-
-
-
 #For when a text box is deslected, happens if user clicks or presses enter while typing in a box
 def deselect(selected):
     if(selected[1] == "smallTextBox" and selected[0][0].replace(" ", "") != ""): # if it's a small text box and has a valid id excluding spaces        
@@ -45,8 +37,6 @@ def deselect(selected):
             database.insertFunction(smallTextBoxes[selected[2]][0], " ", " ", selected[0][0])
 
     selected = None
-    
-
 
 #=====================================================================
 #   Splash Screen
@@ -118,7 +108,6 @@ while True:
     
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            #save(largeTextBoxes)
             # Close connection to Heroku
             database.CloseConnection()
             pygame.display.quit(), sys.exit()
