@@ -21,6 +21,7 @@ firstNames = []
 lastNames = []
 codeNames = []
 
+
 # Passes the database info from Database.py into here
 database.PassInformation(idNumbers, firstNames, lastNames, codeNames) 
 
@@ -135,7 +136,7 @@ while True:
                             redPlayers.append(largeTextBoxes[x][0])
                         else:
                             greenPlayers.append(largeTextBoxes[x][0])
-                GameScreen.runGameScreen(redPlayers, greenPlayers)
+                GameScreen.runGameScreen(redPlayers, greenPlayers) #Runs the GAME SCREEN
         # check for mouse click
         if event.type == pygame.MOUSEBUTTONDOWN:
             if selected != None:

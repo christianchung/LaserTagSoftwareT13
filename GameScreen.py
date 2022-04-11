@@ -1,7 +1,7 @@
 import sys
 import pygame
 import time # for the sleep function
-import udp
+from udp import udpsocket
 
 pygame.init()
 
@@ -68,7 +68,10 @@ def endGame():
 #   Game Screen
 #=====================================================================
 def runGameScreen(redPlayers, greenPlayers):
-
+    udps = udpsocket()
+    udps.initlizeSocket()
+    udps.getTeam(redPlayers, greenPlayers)
+    
     # light shade of the button
     checkBoxColor = (115,115,115)
     checkBoxColorHover = (75,75,75)
@@ -185,19 +188,29 @@ def runGameScreen(redPlayers, greenPlayers):
             screen.blit(text, (540, playerLocation)) # position text on screen
             playerLocation = playerLocation + 25
         
+        #Testing UDPS object
+        udps.runSocket()
+        
         # add Current Game Action
         text = font.render("Current Game Action", 1, (5,5,5)) # Black text color
         screen.blit(text, (280, 340)) # position text on screen
 
         # add Game Events (*FIX*)
         actionLocation = 375
-        if udp.data != "":
-            for x in udp.data:
-                gameEvents[x] = x[0].decode()
-        for y in gameEvents[:9]:
+        if udps.cleandata != "":
+            for x in udps.cleandata:
+                # gameEvents[i] = x[0].decode()
+                gameEvents.append(x)
+        # print(gameEvents)
+        # for y in gameEvents[:9]:
+        for y in gameEvents[-9:]:
+            # x = y.split
+            # print(y)
+            print(y.split())
             text = font.render(y, 1, (5,5,5)) # Black text color
             screen.blit(text, (120, actionLocation)) # position text on screen
             actionLocation = actionLocation + 25
+        
 
         # add Time Remaining
         text = font.render("Time Remaining:", 1, (5,5,5)) # Black text color
