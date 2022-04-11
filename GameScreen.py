@@ -9,6 +9,8 @@ screen = pygame.display.set_mode([800, 800])
 font = pygame.font.Font(None, 30)
 redScore = 0
 greenScore = 0
+GameON = 0
+
 #=====================================================================
 #   CountDown Timer
 #=====================================================================
@@ -70,8 +72,9 @@ def pointTracker(redPoints, greenPoints, player):
     text = font.render(str(greenScore), 1, (255,255,255)) 
     screen.blit(text, (705, 285)) 
 
-    redScore += redPoints
-    greenScore += greenPoints
+    if GameON == 1:
+        redScore += redPoints
+        greenScore += greenPoints
 
     # Update Score
     text = font.render(str(redScore), 1, (195,5,5)) 
@@ -104,6 +107,7 @@ def runGameScreen(redPlayers, greenPlayers):
     smallTextBoxes = []
     largeTextBoxes = []
     gameEvents = ["-","-","-","-","-","-","-","-","-"]
+    global GameON
 
 
     # for x in range(20): # make 20 left check boxes 
@@ -167,6 +171,7 @@ def runGameScreen(redPlayers, greenPlayers):
                 if event.key == pygame.K_F3:
                     startGame()
                     isGameStart = True
+                    GameON = 1
                     startTime = int(time.time())
                 if event.key == pygame.K_F5:
                     iteratorCheck = False
@@ -189,7 +194,7 @@ def runGameScreen(redPlayers, greenPlayers):
         playerLocation = 100
         score = 0000
         for x in redPlayers[:6]:
-            text = font.render(x + "   " + str(score), 1, (5,5,5)) # Black text color
+            text = font.render(x, 1, (5,5,5)) # Black text color
             screen.blit(text, (120, playerLocation)) # position text on screen
             playerLocation = playerLocation + 25
 
@@ -203,7 +208,7 @@ def runGameScreen(redPlayers, greenPlayers):
         playerLocation = 100
         score = 0000
         for x in greenPlayers[:6]:
-            text = font.render(x + "   " + str(score), 1, (5,5,5)) # Black text color
+            text = font.render(x, 1, (5,5,5)) # Black text color
             screen.blit(text, (540, playerLocation)) # position text on screen
             playerLocation = playerLocation + 25
         
@@ -214,7 +219,7 @@ def runGameScreen(redPlayers, greenPlayers):
         text = font.render("Current Game Action", 1, (5,5,5)) # Black text color
         screen.blit(text, (280, 340)) # position text on screen
 
-        # add Game Events (*FIX*)
+        # add Game Events
         actionLocation = 375
         if udps.cleandata != "":
             for x in udps.cleandata:
@@ -226,9 +231,10 @@ def runGameScreen(redPlayers, greenPlayers):
             # x = y.split
             # print(y)
             print(y.split())
-            text = font.render(y, 1, (5,5,5)) # Black text color
-            screen.blit(text, (120, actionLocation)) # position text on screen
-            actionLocation = actionLocation + 25
+            if isGameStart == 1:
+                text = font.render(y, 1, (5,5,5)) # Black text color
+                screen.blit(text, (120, actionLocation)) # position text on screen
+                actionLocation = actionLocation + 25
 
         # add Time Remaining
         text = font.render("Time Remaining:", 1, (5,5,5)) # Black text color
@@ -245,6 +251,7 @@ def runGameScreen(redPlayers, greenPlayers):
         if(isGameStart):
             if (minutes < 1 and seconds < 9): #if game timer has 8 seconds left(allow time for match end slide), call endGame() function
                 isGameStart = False
+                GameON = 0
                 endGame()
             else:
                text = font.render(remainingTime,  1, (5,5,5))
